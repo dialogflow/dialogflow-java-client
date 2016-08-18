@@ -375,6 +375,8 @@ public class AIDataService {
 
         try {
             final URL url = new URL(config.getQuestionUrl());
+            
+            Log.debug("Connecting to {}", url);
 
             if (config.getProxy() != null) {
                 connection = (HttpURLConnection) url.openConnection(config.getProxy());

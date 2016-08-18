@@ -80,7 +80,7 @@ public class HttpClient {
         //os.write( ("Content-Transfer-Encoding: binary\r\n"  ).getBytes());
         os.write("\r\n".getBytes());
 
-        Log.info("Sound write start");
+        Log.debug("Sound write start");
 
         FileOutputStream outputStream = null;
 
@@ -89,7 +89,7 @@ public class HttpClient {
             if (!cacheDir.exists()) {
                 cacheDir.mkdirs();
             }
-            Log.info(cacheDir.getAbsolutePath());
+            Log.debug(cacheDir.getAbsolutePath());
 
             final File soundFile = new File(cacheDir, "log.wav");
             outputStream = new FileOutputStream(soundFile, false);
@@ -100,7 +100,6 @@ public class HttpClient {
         int bytesActuallyRead;
 
         bytesActuallyRead = data.read(buffer, 0, buffer.length);
-        Log.info("Bytes read: " + bytesActuallyRead);
 
         while (bytesActuallyRead >= 0) {
             if (bytesActuallyRead > 0) {
@@ -111,14 +110,13 @@ public class HttpClient {
                 }
             }
             bytesActuallyRead = data.read(buffer, 0, buffer.length);
-            Log.info("Bytes read: " + bytesActuallyRead);
         }
 
         if (writeSoundLog) {
             outputStream.close();
         }
 
-        Log.info("Sound write finished");
+        Log.debug("Sound write finished");
 
         os.write("\r\n".getBytes());
     }
