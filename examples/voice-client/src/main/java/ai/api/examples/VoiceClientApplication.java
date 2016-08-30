@@ -52,9 +52,6 @@ public class VoiceClientApplication {
 		
 		AIConfiguration configuration = new AIConfiguration(args[0]);
 		
-		// Let's create a unique session id for each application run
-		configuration.generateSessionId();
-		
 		AIDataService dataService = new AIDataService(configuration);
 
 		for (int i = 1; i < args.length; ++i) {

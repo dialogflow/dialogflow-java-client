@@ -55,9 +55,6 @@ public class TextClientApplication {
 		
 		AIConfiguration configuration = new AIConfiguration(args[0]);
 		
-		// Let's create a unique session id for each application run
-		configuration.generateSessionId();
-		
 		AIDataService dataService = new AIDataService(configuration);
 		
 		String line;

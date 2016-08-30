@@ -12,6 +12,7 @@ import ai.api.util.ParametersConverterTest;
 	AIConfigurationTest.class,
 	AIResponseTest.class,
 	ParametersConverterTest.class,
+	AIServiceContextBuilderTest.class
 	})
 public class AllUnitTests {
 

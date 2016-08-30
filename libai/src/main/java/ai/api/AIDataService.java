@@ -42,7 +42,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.validation.constraints.NotNull;
 
@@ -63,18 +62,46 @@ public class AIDataService {
 
     @NotNull
     private final AIConfiguration config;
-
+    
     @NotNull
-    private final String sessionId;
+    private final AIServiceContext serviceContext;
 
     @NotNull
     private final Gson gson = GsonFactory.getDefaultFactory().getGson();
 
-    public AIDataService(@NotNull final AIConfiguration config) {
+    /**
+     * Create new service for given configuration and some predefined service context 
+     * @param config Service configuration data
+     * @param serviceContext Service context. If <code>null</code> then new context will be created
+     * @throws IllegalArgumentException If config parameter is null
+     */
+    public AIDataService(@NotNull final AIConfiguration config, final AIServiceContext serviceContext) {
+    	if (config == null) {
+    		throw new IllegalArgumentException("config should not be null");
+    	}
         this.config = config.clone();
-
-        String sessionId = config.getSessionId();
-        this.sessionId = sessionId != null ? sessionId : UUID.randomUUID().toString();
+        if (serviceContext == null) {
+        	this.serviceContext = new AIServiceContextBuilder().generateSessionId().build();
+        } else {
+        	this.serviceContext = serviceContext;
+        }
+    }
+    
+    /**
+     * Create new service with unique context for given configuration 
+     * @param config Service configuration data
+     * @throws IllegalArgumentException If config parameter is null
+     */
+    public AIDataService(@NotNull final AIConfiguration config) {
+    	this(config, null);
+    }
+    
+    /**
+     * @return Current context used in each request 
+     */
+    @NotNull
+    public AIServiceContext getContext() {
+    	return serviceContext;
     }
 
     public AIResponse request(@NotNull final AIRequest request) throws AIServiceException {
@@ -98,7 +125,7 @@ public class AIDataService {
         try {
 
             request.setLanguage(config.getApiAiLanguage());
-            request.setSessionId(sessionId);
+            request.setSessionId(serviceContext.getSessionId());
             request.setTimezone(Calendar.getInstance().getTimeZone().getID());
 
             Map<String, String> additionalHeaders = null;
@@ -109,7 +136,7 @@ public class AIDataService {
             }
 
             final String queryData = gson.toJson(request);
-            final String response = doTextRequest(config.getQuestionUrl(), queryData, additionalHeaders);
+            final String response = doTextRequest(config.getQuestionUrl(serviceContext.getSessionId()), queryData, additionalHeaders);
 
             if (StringUtils.isEmpty(response)) {
                 throw new AIServiceException("Empty response from ai service. Please check configuration and Internet connection.");
@@ -181,7 +208,7 @@ public class AIDataService {
             final AIRequest request = new AIRequest();
 
             request.setLanguage(config.getApiAiLanguage());
-            request.setSessionId(sessionId);
+            request.setSessionId(serviceContext.getSessionId());
             request.setTimezone(Calendar.getInstance().getTimeZone().getID());
 
             Map<String, String> additionalHeaders = null;
@@ -254,7 +281,7 @@ public class AIDataService {
 
         final String requestData = gson.toJson(userEntities);
         try {
-            final String response = doTextRequest(config.getUserEntitiesEndpoint(sessionId), requestData);
+            final String response = doTextRequest(config.getUserEntitiesEndpoint(serviceContext.getSessionId()), requestData);
             if (StringUtils.isEmpty(response)) {
                 throw new AIServiceException("Empty response from ai service. Please check configuration and Internet connection.");
             }
@@ -282,7 +309,7 @@ public class AIDataService {
     }
 
     protected String doTextRequest(final String requestJson) throws MalformedURLException, AIServiceException {
-        return doTextRequest(config.getQuestionUrl(), requestJson);
+        return doTextRequest(config.getQuestionUrl(serviceContext.getSessionId()), requestJson);
     }
 
     protected String doTextRequest(final String endpoint, final String requestJson) throws MalformedURLException, AIServiceException {
@@ -374,7 +401,7 @@ public class AIDataService {
         HttpClient httpClient = null;
 
         try {
-            final URL url = new URL(config.getQuestionUrl());
+            final URL url = new URL(config.getQuestionUrl(serviceContext.getSessionId()));
             
             Log.debug("Connecting to {}", url);
 

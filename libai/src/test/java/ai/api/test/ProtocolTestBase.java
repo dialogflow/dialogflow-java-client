@@ -28,6 +28,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import ai.api.util.StringUtils;
+
 import org.junit.Test;
 
 import java.io.InputStream;
@@ -79,8 +80,6 @@ public abstract class ProtocolTestBase {
                 AIConfiguration.SupportedLanguages.English);
 
         updateConfig(config);
-        
-        config.resetSessionId();
 
         return new AIDataService(config);
     }
@@ -90,8 +89,6 @@ public abstract class ProtocolTestBase {
                 AIConfiguration.SupportedLanguages.English);
 
         updateConfig(config);
-
-        config.resetSessionId();
 
         return new AIDataService(config);
     }
@@ -249,7 +246,7 @@ public abstract class ProtocolTestBase {
         updateConfig(config);
 
         final AIDataService firstService = new AIDataService(config);
-        final AIDataService secondService = new AIDataService(config);
+        final AIDataService secondService = new AIDataService(config, firstService.getContext());
 
         {
             final AIRequest weatherRequest = new AIRequest();
@@ -414,12 +411,10 @@ public abstract class ProtocolTestBase {
         final AIConfiguration config = new AIConfiguration(getAccessToken(),
                 AIConfiguration.SupportedLanguages.English);
 
-        config.generateSessionId();
-        
         updateConfig(config);
 
         final AIDataService aiDataService = new AIDataService(config);
-        final AIDataService secondService = new AIDataService(config);
+        final AIDataService secondService = new AIDataService(config, aiDataService.getContext());
 
         {
             final AIRequest aiRequest = new AIRequest();
@@ -503,11 +498,10 @@ public abstract class ProtocolTestBase {
         final AIConfiguration config = new AIConfiguration(getAccessToken(),
                 AIConfiguration.SupportedLanguages.English);
 
-        config.generateSessionId();
         updateConfig(config);
 
         final AIDataService aiDataService = new AIDataService(config);
-        final AIDataService secondDataService = new AIDataService(config);
+        final AIDataService secondDataService = new AIDataService(config, aiDataService.getContext());
 
         final Entity dwarfsEntity = createDwarfsEntity();
 
@@ -556,11 +550,10 @@ public abstract class ProtocolTestBase {
         final AIConfiguration config = new AIConfiguration(getAccessToken(),
                 AIConfiguration.SupportedLanguages.English);
 
-        config.generateSessionId();
         updateConfig(config);
 
         final AIDataService aiDataService = new AIDataService(config);
-        final AIDataService secondDataService = new AIDataService(config);
+        final AIDataService secondDataService = new AIDataService(config, aiDataService.getContext());
 
         final Entity dwarfsEntity = createDwarfsEntity();
         final Entity hobbitsEntity = createHobbitsEntity();
