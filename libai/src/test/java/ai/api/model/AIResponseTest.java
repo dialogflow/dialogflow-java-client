@@ -5,7 +5,9 @@ import com.google.gson.JsonObject;
 
 import org.junit.Test;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import ai.api.GsonFactory;
 
@@ -24,7 +26,7 @@ public class AIResponseTest {
             "    \"action\": \"task_create\",\n" +
             "    \"parameters\": {\n" +
             "      \"date\": \"\",\n" +
-            "      \"date-time\": \"2015-03-19T07:00:00+0600\",\n" +
+            "      \"date-time\": \"2015-03-19T07:00:00"+(new SimpleDateFormat("Z").format(new Date()))+"\",\n" +
             "      \"time\": \"\",\n" +
             "      \"text\": \"feed cat\",\n" +
             "      \"priority\": \"\",\n" +
