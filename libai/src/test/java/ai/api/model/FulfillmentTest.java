@@ -21,34 +21,46 @@ package ai.api.model;
  *
  ***********************************************************************************************************************/
 
-import com.google.gson.annotations.SerializedName;
+import static org.junit.Assert.*;
 
-import java.io.Serializable;
-import java.util.List;
+import org.junit.Test;
 
-public class Fulfillment implements Serializable {
+import com.google.gson.Gson;
 
-	private static final long serialVersionUID = 1L;
+import ai.api.GsonFactory;
+import ai.api.model.ResponseMessage.ResponseSpeech;
+
+
+public class FulfillmentTest {
 	
-    @SerializedName("speech")
-    private String speech;
-    
-    @SerializedName("messages")
-    private List<ResponseMessage> messages;
+	final static Gson gson = GsonFactory.getDefaultFactory().getGson();
 
-    public String getSpeech() {
-        return speech;
-    }
+    private static final String TEST_FULFILLMENT = "{\"speech\":\"text\", "
+    		+ "\"messages\":[{\"type\":0, \"speech\":[\"one\"]}]}";
+    
+    private static final String TEST_FULFILLMENT_NO_MESSAGES = "{\"speech\":\"text\"}";
 
-    public void setSpeech(final String speech) {
-        this.speech = speech;
-    }
-    
-    public List<ResponseMessage> getMessages() {
-    	return messages;
-    }
-    
-    public void getMessages(List<ResponseMessage> messages) {
-    	this.messages = messages;
-    }
+	@Test
+	public void testDeserialization() {
+		
+		final Fulfillment fulfillment = gson.fromJson(TEST_FULFILLMENT, Fulfillment.class);
+
+		assertEquals("text", fulfillment.getSpeech());
+		
+
+		assertEquals(1, fulfillment.getMessages().size());
+		
+		ResponseSpeech speech = (ResponseSpeech) fulfillment.getMessages().get(0);
+		
+		assertEquals(1, speech.getSpeech().size());
+		assertEquals("one", speech.getSpeech().get(0));
+	}
+	
+	@Test
+	public void testDeserializationNoMessages() {
+		
+		final Fulfillment fulfillment = gson.fromJson(TEST_FULFILLMENT_NO_MESSAGES, Fulfillment.class);
+
+		assertNull(fulfillment.getMessages());
+	}
 }

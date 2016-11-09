@@ -5,7 +5,7 @@ package ai.api;
  * API.AI Java SDK - client-side libraries for API.AI
  * =================================================
  *
- * Copyright (C) 2014 by Speaktoit, Inc. (https://www.speaktoit.com)
+ * Copyright (C) 2016 by Speaktoit, Inc. (https://www.speaktoit.com)
  * https://www.api.ai
  *
  ***********************************************************************************************************************
@@ -23,14 +23,29 @@ package ai.api;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 
+import ai.api.model.ResponseMessage;
+import ai.api.model.ResponseMessage.MessageType;
+
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 public class GsonFactory {
+	
+	private static final Gson DEFAULT_GSON = new GsonBuilder().create();
 
     private static final Gson PROTOCOL_GSON = new GsonBuilder()
-            .setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).toPattern()).create();
+            .setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).toPattern())
+            .registerTypeAdapter(ResponseMessage.class, new ResponseItemDeserializer())
+            .registerTypeAdapter(ResponseMessage.ResponseSpeech.class, new ResponseSpeechDeserializer())
+            .create();
     
     private static final GsonFactory DEFAULT_FACTORY = new GsonFactory();
 
@@ -40,5 +55,35 @@ public class GsonFactory {
     
     public static GsonFactory getDefaultFactory() {
     	return DEFAULT_FACTORY;
+    }
+    
+    private static class ResponseItemDeserializer implements JsonDeserializer<ResponseMessage> {
+    	public ResponseMessage deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+  		      throws JsonParseException {
+	  		
+	  		int typeCode = json.getAsJsonObject().get("type").getAsInt();
+	  		
+	  		for (MessageType type : MessageType.values()) {
+	  			if (type.getCode() == typeCode) {
+	  				return context.deserialize(json, type.getType());
+	  			}
+	  		}
+	  		
+	  		throw new JsonParseException(String.format("Unexpected message type value: %d", typeCode));
+	  	}
+    }
+    
+    private static class ResponseSpeechDeserializer implements JsonDeserializer<ResponseMessage> {
+    	public ResponseMessage.ResponseSpeech deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+    		      throws JsonParseException {
+    		
+    		if (json.isJsonObject() && ((JsonObject)json).get("speech").isJsonPrimitive()) {
+    			JsonArray array = new JsonArray();
+    			array.add(((JsonObject)json).get("speech"));
+    			((JsonObject)json).add("speech", array);
+    		}
+    		
+    		return DEFAULT_GSON.fromJson(json, typeOfT);
+    	}    	
     }
 }
