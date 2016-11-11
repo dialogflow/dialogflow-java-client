@@ -47,6 +47,9 @@ public class AIResponse implements Serializable {
 
     @SerializedName("status")
     private Status status;
+    
+    @SerializedName("sessionId")
+    private String sessionId;
 
     /**
      * Unique identifier of the result.
@@ -59,6 +62,9 @@ public class AIResponse implements Serializable {
         this.id = id;
     }
 
+    /**
+     * Date and time of the request in UTC timezone using ISO-8601 format.
+     */
     public Date getTimestamp() {
         return timestamp;
     }
@@ -68,7 +74,7 @@ public class AIResponse implements Serializable {
     }
 
     /**
-     * Result object
+     * Contains the results of the natual language processing.
      */
     public Result getResult() {
         return result;
@@ -78,12 +84,26 @@ public class AIResponse implements Serializable {
         this.result = result;
     }
 
+    /**
+     * Contains data on how the request succeeded or failed.
+     */
     public Status getStatus() {
         return status;
     }
 
     public void setStatus(final Status status) {
         this.status = status;
+    }
+    
+    /**
+     * Session ID
+     */
+    public String getSessionId() {
+    	return sessionId;
+    }
+    
+    public void setSessionId(String sessionId) {
+    	this.sessionId = sessionId;
     }
 
     public boolean isError() {
@@ -96,11 +116,12 @@ public class AIResponse implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("AIResponse{id='%s', timestamp=%s, result=%s, status=%s}",
+        return String.format("AIResponse{id='%s', timestamp=%s, result=%s, status=%s, sessionId=%s}",
                 id,
                 timestamp,
                 result,
-                status);
+                status,
+        		sessionId);
     }
 
     public void cleanup() {

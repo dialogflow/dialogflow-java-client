@@ -32,12 +32,14 @@ public class AIResponseTest {
             "      \"priority\": \"\",\n" +
             "      \"remind\": \"remind\",\n" +
             "      \"complex_param\": {\"nested_key\": \"nested_value\"}\n" +
-            "    }\n" +
+            "    },\n" +
+            "    \"score\":0.875\n" +
             "  },\n" +
             "  \"status\": {\n" +
             "    \"code\": 200,\n" +
             "    \"errorType\": \"success\"\n" +
-            "  }\n" +
+            "  },\n" +
+            "  \"sessionId\":\"0123456789\"\n" +
             "}";
 
     final static Gson gson = GsonFactory.getDefaultFactory().getGson();
@@ -85,5 +87,42 @@ public class AIResponseTest {
         assertNotNull(jsonObject);
         assertNotNull(jsonObject.get("nested_key"));
         assertEquals("nested_value", jsonObject.get("nested_key").getAsString());
+    }
+    
+    @Test
+    public void getSessionIdTest() {
+    	final AIResponse aiResponse = gson.fromJson(TEST_JSON, AIResponse.class);
+    	assertEquals("0123456789", aiResponse.getSessionId());
+    }
+    
+    @Test
+    public void getIdTest() {
+    	final AIResponse aiResponse = gson.fromJson(TEST_JSON, AIResponse.class);
+    	assertEquals("d872e7d9-d2ee-4ebd-aaff-655bfc8fbf33", aiResponse.getId());
+    }
+    
+    @Test
+    public void getTimestampTest() {
+    	final AIResponse aiResponse = gson.fromJson(TEST_JSON, AIResponse.class);
+    	Calendar calendar = Calendar.getInstance();
+    	calendar.set(2015, 2, 18, 9, 54, 36);
+    	calendar.set(Calendar.MILLISECOND, 216);
+    	assertEquals( calendar.getTime(), aiResponse.getTimestamp());
+    }
+    
+    @Test
+    public void getResultScoreTest() {
+    	final AIResponse aiResponse = gson.fromJson(TEST_JSON, AIResponse.class);
+    	assertEquals(0.875, aiResponse.getResult().getScore(), 1e-6);
+    }
+    
+    @Test
+    public void ResponseToStringTest() {
+    	final AIResponse aiResponse = gson.fromJson(TEST_JSON, AIResponse.class);
+    	String str = aiResponse.toString();
+    	assertEquals("AIResponse{id='d872e7d9-d2ee-4ebd-aaff-655bfc8fbf33', "
+    			+ "timestamp=Wed Mar 18 09:54:36 NOVT 2015, result=Result {action='task_create', resolvedQuery='remind feed cat tomorrow 7 am'}, "
+    			+ "status=Status{code=200, errorType='success', errorDetails='null'}, sessionId=0123456789}",
+    			aiResponse.toString());
     }
 }

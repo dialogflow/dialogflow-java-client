@@ -1,4 +1,4 @@
-package ai.api;
+package ai.api.model;
 
 /***********************************************************************************************************************
  *
@@ -21,26 +21,43 @@ package ai.api;
  *
  ***********************************************************************************************************************/
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+import static org.junit.Assert.*;
 
-import ai.api.model.AIResponseTest;
-import ai.api.model.FulfillmentTest;
-import ai.api.model.MetadataTest;
-import ai.api.model.ResponseMessageTest;
-import ai.api.util.ParametersConverterTest;
+import org.junit.Test;
 
-@RunWith(Suite.class)
-@SuiteClasses({
-	AIConfigurationTest.class,
-	AIResponseTest.class,
-	ParametersConverterTest.class,
-	AIServiceContextBuilderTest.class,
-	FulfillmentTest.class,
-	MetadataTest.class,
-	ResponseMessageTest.class
-	})
-public class AllUnitTests {
+import com.google.gson.Gson;
 
+import ai.api.GsonFactory;
+
+
+public class MetadataTest {
+	
+	final static Gson gson = GsonFactory.getDefaultFactory().getGson();
+
+    private static final String TEST_METADATA_SIMPLE = "{\"intentName\":\"Name\","
+    		+ "\"intentId\":\"Id\","
+    		+ "\"webhookUsed\":\"true\""
+    		+ "}";
+    
+    private static final String TEST_METADATA_EMPTY = "{}";
+
+	@Test
+	public void testDeserialization() {
+		
+		final Metadata metadata = gson.fromJson(TEST_METADATA_SIMPLE, Metadata.class);
+
+		assertEquals("Name", metadata.getIntentName());
+		assertEquals("Id", metadata.getIntentId());
+		assertTrue(metadata.isWebhookUsed());
+	}
+	
+	@Test
+	public void testDeserializationNoWebhook() {
+		
+		final Metadata metadata = gson.fromJson(TEST_METADATA_EMPTY, Metadata.class);
+
+		assertNull(metadata.getIntentName());
+		assertNull(metadata.getIntentId());
+		assertFalse(metadata.isWebhookUsed());
+	}
 }

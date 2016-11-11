@@ -40,6 +40,12 @@ public class Metadata implements Serializable {
      */
     @SerializedName("intentId")
     private String intentId;
+    
+    /**
+     * Indicates wheather webhook functionaly is enabled in the triggered intent.
+     */
+    @SerializedName("webhookUsed")
+    private String webhookUsed;
 
     /**
      * Name of the intent that produced this result
@@ -61,5 +67,16 @@ public class Metadata implements Serializable {
 
     public void setIntentId(final String intentId) {
         this.intentId = intentId;
+    }
+    
+    /**
+     * Indicates wheather webhook functionaly is enabled in the triggered intent.
+     */
+    public boolean isWebhookUsed() {
+    	return webhookUsed != null ? Boolean.valueOf(webhookUsed) : false;
+    }
+    
+    public void setWebhookUsed(boolean webhookUsed) {
+    	this.webhookUsed = Boolean.toString(webhookUsed);
     }
 }

@@ -46,6 +46,9 @@ public class AIContext implements Serializable {
         this.name = name;
     }
 
+    /**
+     * Context name
+     */
     public String getName() {
         return name;
     }
@@ -54,6 +57,9 @@ public class AIContext implements Serializable {
         this.name = name;
     }
 
+    /**
+     * String parameters map
+     */
     public Map<String, String> getParameters() {
         return parameters;
     }
