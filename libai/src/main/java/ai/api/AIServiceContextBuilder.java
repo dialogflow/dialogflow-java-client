@@ -2,8 +2,6 @@ package ai.api;
 
 import java.util.UUID;
 
-import javax.validation.constraints.NotNull;
-
 /***********************************************************************************************************************
  *
  * API.AI Java SDK - client-side libraries for API.AI
@@ -49,11 +47,11 @@ class AIServiceContextBuilder {
 	
 	/**
 	 * Replace current session id with given value
-	 * @param sessionId Unique string session id.
+	 * @param sessionId Unique string session id. Cannot be <code>null</code
 	 * 
 	 * @throws IllegalArgumentException Thrown if sessionId parameter value is null
 	 */
-	public AIServiceContextBuilder setSessionId(@NotNull final String sessionId) {
+	public AIServiceContextBuilder setSessionId(final String sessionId) {
 		if (sessionId == null) {
 			throw new IllegalArgumentException("sessionId cannot be null");
 		}

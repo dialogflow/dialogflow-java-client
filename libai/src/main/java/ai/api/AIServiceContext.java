@@ -1,6 +1,5 @@
 package ai.api;
 
-import javax.validation.constraints.NotNull;
 
 /***********************************************************************************************************************
  *
@@ -29,8 +28,7 @@ import javax.validation.constraints.NotNull;
 public interface AIServiceContext {
 	
 	/**
-	 * @return Session unique string value 
+	 * @return Session unique string value.  Never <code>null</code 
 	 */
-	@NotNull
 	String getSessionId();
 }

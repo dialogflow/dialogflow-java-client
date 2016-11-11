@@ -25,8 +25,6 @@ import java.net.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.validation.constraints.NotNull;
-
 import ai.api.util.StringUtils;
 
 /**
@@ -57,10 +55,10 @@ public class AIConfiguration implements Cloneable {
      * 
      * See https://docs.api.ai/v20/docs/authentication for details
      * 
-     * @param clientAccessToken An agent unique key for
+     * @param clientAccessToken An agent unique key. Cannot be <code>null</code>
      * @param language An agent language
      */
-    public AIConfiguration(@NotNull final String clientAccessToken, final SupportedLanguages language) {
+    public AIConfiguration(final String clientAccessToken, final SupportedLanguages language) {
     	if (clientAccessToken == null) {
     		throw new IllegalArgumentException("clientAccessToken");
     	}
@@ -76,9 +74,9 @@ public class AIConfiguration implements Cloneable {
      * 
      * See https://docs.api.ai/v20/docs/authentication for details
      * 
-     * @param clientAccessToken An agent unique key for
+     * @param clientAccessToken An agent unique key. Cannot be <code>null</code>
      */
-    public AIConfiguration(@NotNull final String clientAccessToken) {
+    public AIConfiguration(final String clientAccessToken) {
     	this(clientAccessToken, null);
     }
 
@@ -91,16 +89,16 @@ public class AIConfiguration implements Cloneable {
 
     /**
      * Get client agent language
+     * @return Never <code>null</code>
      */
-    @NotNull
     public String getLanguage() {
         return language.languageTag;
     }
 
     /**
      * Get api.ai agent language
+     * @return Never <code>null</code>
      */
-    @NotNull
     public String getApiAiLanguage() {
         return language.apiaiLanguage;
     }
@@ -216,16 +214,14 @@ public class AIConfiguration implements Cloneable {
          */
         public static SupportedLanguages DEFAULT = SupportedLanguages.English;
         
-        @NotNull
         private final String languageTag;
-        @NotNull
         private final String apiaiLanguage;
 
-        SupportedLanguages(@NotNull final String languageTag) {
+        SupportedLanguages(final String languageTag) {
         	this(languageTag, languageTag);
         }
 
-        SupportedLanguages(@NotNull final String languageTag, @NotNull final String apiaiLanguage) {
+        SupportedLanguages(final String languageTag, final String apiaiLanguage) {
         	assert languageTag != null;
         	assert apiaiLanguage != null;
         	

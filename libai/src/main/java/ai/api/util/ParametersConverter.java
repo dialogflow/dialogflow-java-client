@@ -28,8 +28,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import javax.validation.constraints.NotNull;
-
 /**
  * Helper to extract possible response parameters values
  */
@@ -49,24 +47,37 @@ public final class ParametersConverter {
     private ParametersConverter() {
     }
 
-    @NotNull 
-    public static Date parseDateTime(@NotNull final String parameter) throws ParseException {
+    /**
+     * @param parameter Cannot be <code>null</code>
+     * @return Never <code>null</code>
+     * @throws ParseException
+     */
+    public static Date parseDateTime(final String parameter) throws ParseException {
     	if (parameter == null) {
             throw new IllegalArgumentException("Parameter must not be null");
         }
         return DATE_TIME_FORMAT.parse(parameter);
     }
 
-    @NotNull 
-    public static Date parseDate(@NotNull final String parameter) throws ParseException {
+    /**
+     * @param parameter Cannot be <code>null</code>
+     * @return Never <code>null</code
+     * @throws ParseException
+     */
+    public static Date parseDate(final String parameter) throws ParseException {
     	if (parameter == null) {
             throw new IllegalArgumentException("Parameter must not be null");
         }
         return DATE_FORMAT.parse(parameter);
     }
 
-    @NotNull 
-    public static Date parseTime(@NotNull final String parameter) throws ParseException {
+	/**
+
+	 * @param parameter Cannot be <code>null</code>
+	 * @return Never <code>null</code
+	 * @throws ParseException
+	 */
+    public static Date parseTime(final String parameter) throws ParseException {
     	if (parameter == null) {
             throw new IllegalArgumentException("Parameter must not be null");
         }
@@ -81,8 +92,13 @@ public final class ParametersConverter {
         return taskDueDate.getTime();
     }
 
-    @NotNull 
-    public static PartialDate parsePartialDate(@NotNull final String parameter) throws ParseException {
+    /**
+     * 
+     * @param parameter Cannot be <code>null</code>
+     * @return Never <code>null</code
+     * @throws ParseException
+     */
+    public static PartialDate parsePartialDate(final String parameter) throws ParseException {
         if (parameter == null) {
             throw new IllegalArgumentException("Parameter must not be empty");
         }
@@ -115,21 +131,37 @@ public final class ParametersConverter {
         }
     }
 
-    @NotNull 
-    public static int parseInteger(@NotNull final String parameter) throws NumberFormatException {
+    /**
+     * 
+     * @param parameter Cannot be <code>null</code>
+     * @return Never <code>null</code
+     * @throws NumberFormatException
+     */
+    public static int parseInteger(final String parameter) throws NumberFormatException {
         return Integer.parseInt(parameter);
     }
 
-    @NotNull 
-    public static float parseFloat(@NotNull final String parameter) {
+    /**
+     * 
+     * @param parameter Cannot be <code>null</code>
+     * @return Never <code>null</code
+     */
+    public static float parseFloat(final String parameter) {
     	if (parameter == null) {
             throw new IllegalArgumentException("Parameter must not be empty");
         }
         return Float.parseFloat(parameter);
     }
     
-    @NotNull
-    private static Integer parsePart(@NotNull final String part) {
+    /**
+     * 
+     * @param part Cannot be <code>null</code>
+     * @return Never <code>null</code
+     */
+    private static Integer parsePart(final String part) {
+    	if (part == null) {
+    		throw new IllegalArgumentException("part");
+    	}
         if (part.indexOf('u') >= 0) {
             return PartialDate.UNSPECIFIED_VALUE;
         } else {

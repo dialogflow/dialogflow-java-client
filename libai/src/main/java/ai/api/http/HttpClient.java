@@ -33,8 +33,6 @@ import java.net.HttpURLConnection;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-import javax.validation.constraints.NotNull;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -45,7 +43,9 @@ public class HttpClient {
     private static final int BUFFER_LENGTH = 4096;
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
-    @NotNull
+    /**
+     *  Cannot be <code>null</code
+     */
     private final HttpURLConnection connection;
     private OutputStream os;
 
@@ -54,7 +54,13 @@ public class HttpClient {
 
     private boolean writeSoundLog;
 
-    public HttpClient(@NotNull final HttpURLConnection connection) {
+    /**
+     * @param connection Cannot be <code>null</code
+     */
+    public HttpClient(final HttpURLConnection connection) {
+    	if (connection == null) {
+    		throw new IllegalArgumentException("Connection cannot be null");
+    	}
         this.connection = connection;
     }
 
@@ -66,14 +72,25 @@ public class HttpClient {
         os = connection.getOutputStream();
     }
 
-    public void addFormPart(@NotNull final String paramName, @NotNull final String value) throws IOException {
+    /**
+     * @param paramName  Cannot be <code>null</code
+     * @param value  Cannot be <code>null</code
+     * @throws IOException
+     */
+    public void addFormPart(final String paramName, final String value) throws IOException {
         os.write((delimiter + boundary + "\r\n").getBytes());
         os.write("Content-Type: application/json\r\n".getBytes());
         os.write(("Content-Disposition: form-data; name=\"" + paramName + "\"\r\n").getBytes());
         os.write(("\r\n" + value + "\r\n").getBytes());
     }
 
-    public void addFilePart(@NotNull final String paramName, @NotNull final String fileName, @NotNull final InputStream data) throws IOException {
+    /**
+     * @param paramName Cannot be <code>null</code
+     * @param fileName Cannot be <code>null</code
+     * @param data Cannot be <code>null</code
+     * @throws IOException
+     */
+    public void addFilePart(final String paramName, final String fileName, final InputStream data) throws IOException {
         os.write((delimiter + boundary + "\r\n").getBytes());
         os.write(("Content-Disposition: form-data; name=\"" + paramName + "\"; filename=\"" + fileName + "\"\r\n").getBytes());
         os.write(("Content-Type: audio/wav\r\n").getBytes());
@@ -126,7 +143,10 @@ public class HttpClient {
         os.close();
     }
 
-    @NotNull
+    /**
+     * @return Response string. Never <code>null</code
+     * @throws IOException
+     */
     public String getResponse() throws IOException {
         final InputStream inputStream = new BufferedInputStream(connection.getInputStream());
         final String response = IOUtils.readAll(inputStream, DEFAULT_CHARSET);

@@ -40,8 +40,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import javax.validation.constraints.NotNull;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -60,22 +58,28 @@ public class AIDataService {
     private static final Logger Log = LogManager.getLogger(AIDataService.class);
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
-    @NotNull
+	/**
+	 *  Cannot be <code>null</code
+	 */
     private final AIConfiguration config;
     
-    @NotNull
+    /**
+     * Cannot be <code>null</code
+     */
     private final AIServiceContext serviceContext;
 
-    @NotNull
+    /**
+     * Cannot be <code>null</code
+     */
     private final Gson gson = GsonFactory.getDefaultFactory().getGson();
 
     /**
      * Create new service for given configuration and some predefined service context 
-     * @param config Service configuration data
+     * @param config Service configuration data. Cannot be <code>null</code>
      * @param serviceContext Service context. If <code>null</code> then new context will be created
      * @throws IllegalArgumentException If config parameter is null
      */
-    public AIDataService(@NotNull final AIConfiguration config, final AIServiceContext serviceContext) {
+    public AIDataService(final AIConfiguration config, final AIServiceContext serviceContext) {
     	if (config == null) {
     		throw new IllegalArgumentException("config should not be null");
     	}
@@ -89,33 +93,37 @@ public class AIDataService {
     
     /**
      * Create new service with unique context for given configuration 
-     * @param config Service configuration data
+     * @param config Service configuration data. Cannot be <code>null</code>
      * @throws IllegalArgumentException If config parameter is null
      */
-    public AIDataService(@NotNull final AIConfiguration config) {
+    public AIDataService(final AIConfiguration config) {
     	this(config, null);
     }
     
     /**
-     * @return Current context used in each request 
+     * @return Current context used in each request. Never <code>null</code>
      */
-    @NotNull
     public AIServiceContext getContext() {
     	return serviceContext;
     }
 
-    public AIResponse request(@NotNull final AIRequest request) throws AIServiceException {
+    /**
+     * Make request to the ai service.
+     *
+     * @param request request object to the service. Cannot be <code>null</code>
+     * @return response object from service. Never <code>null</code>
+     */
+    public AIResponse request(final AIRequest request) throws AIServiceException {
         return request(request, null);
     }
 
     /**
      * Make request to the ai service.
      *
-     * @param request request object to the service
-     * @return response object from service
+     * @param request request object to the service. Cannot be <code>null</code>
+     * @return response object from service. Never <code>null</code>
      */
-    @NotNull
-    public AIResponse request(@NotNull final AIRequest request, final RequestExtras requestExtras) throws AIServiceException {
+    public AIResponse request(final AIRequest request, final RequestExtras requestExtras) throws AIServiceException {
         if (request == null) {
             throw new IllegalArgumentException("Request argument must not be null");
         }
@@ -170,38 +178,36 @@ public class AIDataService {
     /**
      * Make requests to the ai service with voice data. This method must not be called in the UI Thread.
      *
-     * @param voiceStream voice data stream for recognition
-     * @return response object from service
+     * @param voiceStream voice data stream for recognition.  Cannot be <code>null</code
+     * @return response object from service. Never <code>null</code>
      * @throws AIServiceException
      */
-    @NotNull
-    public AIResponse voiceRequest(@NotNull final InputStream voiceStream) throws AIServiceException {
+    public AIResponse voiceRequest(final InputStream voiceStream) throws AIServiceException {
         return voiceRequest(voiceStream, new RequestExtras());
     }
 
     /**
      * Make requests to the ai service with voice data. This method must not be called in the UI Thread.
      *
-     * @param voiceStream voice data stream for recognition
+     * @param voiceStream voice data stream for recognition. Cannot be <code>null</code
      * @param aiContexts additional contexts for request
-     * @return response object from service
+     * @return response object from service. Never <code>null</code>
      * @throws AIServiceException
      */
-    @NotNull
-    public AIResponse voiceRequest(@NotNull final InputStream voiceStream, final List<AIContext> aiContexts) throws AIServiceException {
+    public AIResponse voiceRequest(final InputStream voiceStream, final List<AIContext> aiContexts) throws AIServiceException {
         return voiceRequest(voiceStream, new RequestExtras(aiContexts, null));
     }
 
     /**
      * Make requests to the ai service with voice data. This method must not be called in the UI Thread.
      *
-     * @param voiceStream voice data stream for recognition
+     * @param voiceStream voice data stream for recognition. Cannot be <code>null</code
      * @param requestExtras object that can hold additional contexts and entities
-     * @return response object from service
+     * @return response object from service. Never <code>null</code>
      * @throws AIServiceException
      */
-    @NotNull
-    public AIResponse voiceRequest(@NotNull final InputStream voiceStream, final RequestExtras requestExtras) throws AIServiceException {
+    public AIResponse voiceRequest(final InputStream voiceStream, final RequestExtras requestExtras) throws AIServiceException {
+    	assert voiceStream != null;
         Log.debug("Start voice request");
 
         try {
@@ -316,10 +322,21 @@ public class AIDataService {
         return doTextRequest(endpoint, requestJson, null);
     }
     
-    protected String doTextRequest(@NotNull final String endpoint,
-                                   @NotNull final String requestJson, 
+    /**
+     * 
+     * @param endpoint Cannot be <code>null</code
+     * @param requestJson Cannot be <code>null</code
+     * @param additionalHeaders
+     * @return
+     * @throws MalformedURLException
+     * @throws AIServiceException
+     */
+    protected String doTextRequest(final String endpoint,
+                                   final String requestJson, 
                                    final Map<String, String> additionalHeaders) throws MalformedURLException, AIServiceException {
 
+    	assert endpoint != null;
+    	assert requestJson != null;
         HttpURLConnection connection = null;
 
         try {
@@ -386,17 +403,26 @@ public class AIDataService {
 
     }
 
-    protected String doSoundRequest(@NotNull final InputStream voiceStream, @NotNull final String queryData) throws MalformedURLException, AIServiceException {
+    /**
+     * Method extracted for testing purposes
+     * @param voiceStream Cannot be <code>null</code
+     * @param queryData Cannot be <code>null</code
+     */
+    protected String doSoundRequest(final InputStream voiceStream, final String queryData) throws MalformedURLException, AIServiceException {
         return doSoundRequest(voiceStream, queryData, null);
     }
 
     /**
      * Method extracted for testing purposes
+     * @param voiceStream Cannot be <code>null</code
+     * @param queryData Cannot be <code>null</code
      */
-    protected String doSoundRequest(@NotNull final InputStream voiceStream,
-                                    @NotNull final String queryData,
+    protected String doSoundRequest(final InputStream voiceStream,
+                                    final String queryData,
                                     final Map<String, String> additionalHeaders) throws MalformedURLException, AIServiceException {
 
+    	assert voiceStream != null;
+    	assert queryData != null;
         HttpURLConnection connection = null;
         HttpClient httpClient = null;
 
@@ -460,7 +486,9 @@ public class AIDataService {
         }
     }
 
-    private void fillRequest(@NotNull final AIRequest request, @NotNull final RequestExtras requestExtras) {
+    private void fillRequest(final AIRequest request, final RequestExtras requestExtras) {
+    	assert request != null;
+    	assert requestExtras != null;
         if (requestExtras.hasContexts()) {
             request.setContexts(requestExtras.getContexts());
         }

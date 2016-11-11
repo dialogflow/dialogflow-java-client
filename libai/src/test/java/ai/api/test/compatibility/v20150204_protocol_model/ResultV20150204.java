@@ -32,8 +32,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.validation.constraints.NotNull;
-
 import ai.api.util.StringUtils;
 
 import ai.api.model.AIOutputContext;
@@ -82,7 +80,6 @@ public class ResultV20150204 implements Serializable {
         this.speech = speech;
     }
 
-    @NotNull
     public String getAction() {
         if (action == null) {
             return "";
