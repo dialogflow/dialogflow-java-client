@@ -119,7 +119,6 @@ public class AIResponseTest {
     @Test
     public void ResponseToStringTest() {
     	final AIResponse aiResponse = gson.fromJson(TEST_JSON, AIResponse.class);
-    	String str = aiResponse.toString();
     	assertEquals("AIResponse{id='d872e7d9-d2ee-4ebd-aaff-655bfc8fbf33', "
     			+ "timestamp=Wed Mar 18 09:54:36 NOVT 2015, result=Result {action='task_create', resolvedQuery='remind feed cat tomorrow 7 am'}, "
     			+ "status=Status{code=200, errorType='success', errorDetails='null'}, sessionId=0123456789}",
