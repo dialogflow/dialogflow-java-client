@@ -47,7 +47,7 @@ class AIServiceContextBuilder {
 	
 	/**
 	 * Replace current session id with given value
-	 * @param sessionId Unique string session id. Cannot be <code>null</code
+	 * @param sessionId Unique string session id. Cannot be <code>null</code>
 	 * 
 	 * @throws IllegalArgumentException Thrown if sessionId parameter value is null
 	 */

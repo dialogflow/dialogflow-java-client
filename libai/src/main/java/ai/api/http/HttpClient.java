@@ -44,7 +44,7 @@ public class HttpClient {
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
     /**
-     *  Cannot be <code>null</code
+     *  Cannot be <code>null</code>
      */
     private final HttpURLConnection connection;
     private OutputStream os;
@@ -55,7 +55,7 @@ public class HttpClient {
     private boolean writeSoundLog;
 
     /**
-     * @param connection Cannot be <code>null</code
+     * @param connection Cannot be <code>null</code>
      */
     public HttpClient(final HttpURLConnection connection) {
     	if (connection == null) {
@@ -73,8 +73,8 @@ public class HttpClient {
     }
 
     /**
-     * @param paramName  Cannot be <code>null</code
-     * @param value  Cannot be <code>null</code
+     * @param paramName  Cannot be <code>null</code>
+     * @param value  Cannot be <code>null</code>
      * @throws IOException
      */
     public void addFormPart(final String paramName, final String value) throws IOException {
@@ -85,9 +85,9 @@ public class HttpClient {
     }
 
     /**
-     * @param paramName Cannot be <code>null</code
-     * @param fileName Cannot be <code>null</code
-     * @param data Cannot be <code>null</code
+     * @param paramName Cannot be <code>null</code>
+     * @param fileName Cannot be <code>null</code>
+     * @param data Cannot be <code>null</code>
      * @throws IOException
      */
     public void addFilePart(final String paramName, final String fileName, final InputStream data) throws IOException {
@@ -144,7 +144,7 @@ public class HttpClient {
     }
 
     /**
-     * @return Response string. Never <code>null</code
+     * @return Response string. Never <code>null</code>
      * @throws IOException
      */
     public String getResponse() throws IOException {

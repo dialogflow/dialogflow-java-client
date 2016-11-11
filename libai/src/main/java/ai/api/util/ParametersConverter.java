@@ -61,7 +61,7 @@ public final class ParametersConverter {
 
     /**
      * @param parameter Cannot be <code>null</code>
-     * @return Never <code>null</code
+     * @return Never <code>null</code>
      * @throws ParseException
      */
     public static Date parseDate(final String parameter) throws ParseException {
@@ -74,7 +74,7 @@ public final class ParametersConverter {
 	/**
 
 	 * @param parameter Cannot be <code>null</code>
-	 * @return Never <code>null</code
+	 * @return Never <code>null</code>
 	 * @throws ParseException
 	 */
     public static Date parseTime(final String parameter) throws ParseException {
@@ -95,7 +95,7 @@ public final class ParametersConverter {
     /**
      * 
      * @param parameter Cannot be <code>null</code>
-     * @return Never <code>null</code
+     * @return Never <code>null</code>
      * @throws ParseException
      */
     public static PartialDate parsePartialDate(final String parameter) throws ParseException {
@@ -134,7 +134,7 @@ public final class ParametersConverter {
     /**
      * 
      * @param parameter Cannot be <code>null</code>
-     * @return Never <code>null</code
+     * @return Never <code>null</code>
      * @throws NumberFormatException
      */
     public static int parseInteger(final String parameter) throws NumberFormatException {
@@ -144,7 +144,7 @@ public final class ParametersConverter {
     /**
      * 
      * @param parameter Cannot be <code>null</code>
-     * @return Never <code>null</code
+     * @return Never <code>null</code>
      */
     public static float parseFloat(final String parameter) {
     	if (parameter == null) {
@@ -156,7 +156,7 @@ public final class ParametersConverter {
     /**
      * 
      * @param part Cannot be <code>null</code>
-     * @return Never <code>null</code
+     * @return Never <code>null</code>
      */
     private static Integer parsePart(final String part) {
     	if (part == null) {

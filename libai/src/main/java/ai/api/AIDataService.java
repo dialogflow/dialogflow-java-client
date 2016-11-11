@@ -59,17 +59,17 @@ public class AIDataService {
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
 	/**
-	 *  Cannot be <code>null</code
+	 *  Cannot be <code>null</code>
 	 */
     private final AIConfiguration config;
     
     /**
-     * Cannot be <code>null</code
+     * Cannot be <code>null</code>
      */
     private final AIServiceContext serviceContext;
 
     /**
-     * Cannot be <code>null</code
+     * Cannot be <code>null</code>
      */
     private final Gson gson = GsonFactory.getDefaultFactory().getGson();
 
@@ -178,7 +178,7 @@ public class AIDataService {
     /**
      * Make requests to the ai service with voice data. This method must not be called in the UI Thread.
      *
-     * @param voiceStream voice data stream for recognition.  Cannot be <code>null</code
+     * @param voiceStream voice data stream for recognition.  Cannot be <code>null</code>
      * @return response object from service. Never <code>null</code>
      * @throws AIServiceException
      */
@@ -189,7 +189,7 @@ public class AIDataService {
     /**
      * Make requests to the ai service with voice data. This method must not be called in the UI Thread.
      *
-     * @param voiceStream voice data stream for recognition. Cannot be <code>null</code
+     * @param voiceStream voice data stream for recognition. Cannot be <code>null</code>
      * @param aiContexts additional contexts for request
      * @return response object from service. Never <code>null</code>
      * @throws AIServiceException
@@ -201,7 +201,7 @@ public class AIDataService {
     /**
      * Make requests to the ai service with voice data. This method must not be called in the UI Thread.
      *
-     * @param voiceStream voice data stream for recognition. Cannot be <code>null</code
+     * @param voiceStream voice data stream for recognition. Cannot be <code>null</code>
      * @param requestExtras object that can hold additional contexts and entities
      * @return response object from service. Never <code>null</code>
      * @throws AIServiceException
@@ -324,8 +324,8 @@ public class AIDataService {
     
     /**
      * 
-     * @param endpoint Cannot be <code>null</code
-     * @param requestJson Cannot be <code>null</code
+     * @param endpoint Cannot be <code>null</code>
+     * @param requestJson Cannot be <code>null</code>
      * @param additionalHeaders
      * @return
      * @throws MalformedURLException
@@ -405,8 +405,8 @@ public class AIDataService {
 
     /**
      * Method extracted for testing purposes
-     * @param voiceStream Cannot be <code>null</code
-     * @param queryData Cannot be <code>null</code
+     * @param voiceStream Cannot be <code>null</code>
+     * @param queryData Cannot be <code>null</code>
      */
     protected String doSoundRequest(final InputStream voiceStream, final String queryData) throws MalformedURLException, AIServiceException {
         return doSoundRequest(voiceStream, queryData, null);
@@ -414,8 +414,8 @@ public class AIDataService {
 
     /**
      * Method extracted for testing purposes
-     * @param voiceStream Cannot be <code>null</code
-     * @param queryData Cannot be <code>null</code
+     * @param voiceStream Cannot be <code>null</code>
+     * @param queryData Cannot be <code>null</code>
      */
     protected String doSoundRequest(final InputStream voiceStream,
                                     final String queryData,
