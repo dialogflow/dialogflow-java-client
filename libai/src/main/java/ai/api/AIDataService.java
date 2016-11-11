@@ -24,9 +24,6 @@ package ai.api;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import ai.api.util.IOUtils;
 import ai.api.util.StringUtils;
 
@@ -45,6 +42,9 @@ import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import ai.api.http.HttpClient;
 import ai.api.model.AIContext;
 import ai.api.model.AIRequest;
@@ -57,7 +57,7 @@ import ai.api.model.Status;
  */
 public class AIDataService {
 
-    private static final Logger Log = LoggerFactory.getLogger(AIDataService.class);
+    private static final Logger Log = LogManager.getLogger(AIDataService.class);
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
     @NotNull

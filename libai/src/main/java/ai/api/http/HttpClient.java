@@ -21,9 +21,6 @@ package ai.api.http;
  *
  ***********************************************************************************************************************/
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import ai.api.util.IOUtils;
 
 import java.io.BufferedInputStream;
@@ -38,9 +35,12 @@ import java.nio.charset.StandardCharsets;
 
 import javax.validation.constraints.NotNull;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class HttpClient {
 
-	private static final Logger Log = LoggerFactory.getLogger(HttpClient.class);
+	private static final Logger Log = LogManager.getLogger(HttpClient.class);
     private static final int CHUNK_LENGTH = 2048;
     private static final int BUFFER_LENGTH = 4096;
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
