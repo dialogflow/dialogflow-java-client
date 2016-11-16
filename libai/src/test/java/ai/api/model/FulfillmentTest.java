@@ -39,6 +39,11 @@ public class FulfillmentTest {
     		+ "\"messages\":[{\"type\":0, \"speech\":[\"one\"]}]}";
     
     private static final String TEST_FULFILLMENT_NO_MESSAGES = "{\"speech\":\"text\"}";
+    
+    private static final String TEST_FULFILLMENT_WEBHOOK_RESPONSE = "{\"speech\":\"text\","
+    		+ "\"displayText\":\"DisplayText\", \"source\":\"webhook\", "
+    		+ "\"contextOut\": [{\"name\":\"weather\", \"lifespan\":2, \"parameters\":{\"city\":\"Rome\"}}],"
+    		+ "\"data\":{\"param\":\"value\"}}";
 
 	@Test
 	public void testDeserialization() {
@@ -62,5 +67,25 @@ public class FulfillmentTest {
 		final Fulfillment fulfillment = gson.fromJson(TEST_FULFILLMENT_NO_MESSAGES, Fulfillment.class);
 
 		assertNull(fulfillment.getMessages());
+	}
+	
+	@Test
+	public void testDeserializationWebhookResponse() {
+		
+		final Fulfillment fulfillment = gson.fromJson(TEST_FULFILLMENT_WEBHOOK_RESPONSE, Fulfillment.class);
+
+		assertEquals("DisplayText", fulfillment.getDisplayText());
+		assertEquals("webhook", fulfillment.getSource());
+		
+		assertEquals(1, fulfillment.getContextOut().size());
+		AIOutputContext context = fulfillment.getContext("weather");
+		assertEquals("weather", context.getName());
+		assertEquals(2, context.getLifespan());
+		
+		assertEquals(1, context.getParameters().size());
+		assertEquals("Rome", context.getParameters().get("city").getAsString());
+		
+		assertEquals(1, fulfillment.getData().size());
+		assertEquals("value", fulfillment.getData().get("param").getAsString());
 	}
 }

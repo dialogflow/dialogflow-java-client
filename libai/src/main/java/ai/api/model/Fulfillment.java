@@ -1,5 +1,4 @@
 package ai.api.model;
-
 /***********************************************************************************************************************
  *
  * API.AI Java SDK - client-side libraries for API.AI
@@ -21,10 +20,14 @@ package ai.api.model;
  *
  ***********************************************************************************************************************/
 
+import com.google.gson.JsonElement;
 import com.google.gson.annotations.SerializedName;
+
+import ai.api.util.StringUtils;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 public class Fulfillment implements Serializable {
 
@@ -35,6 +38,18 @@ public class Fulfillment implements Serializable {
     
     @SerializedName("messages")
     private List<ResponseMessage> messages;
+    
+    @SerializedName("displayText")
+    private String displayText;
+
+    @SerializedName("data")
+    private Map<String,JsonElement> data;
+
+    @SerializedName("source")
+    private String source;
+    
+    @SerializedName("contextOut")
+    private List<AIOutputContext> contextOut;
 
     public String getSpeech() {
         return speech;
@@ -50,5 +65,56 @@ public class Fulfillment implements Serializable {
     
     public void getMessages(List<ResponseMessage> messages) {
     	this.messages = messages;
+    }
+    
+    public Map<String,JsonElement> getData() {
+        return data;
+    }
+
+    public void setData(final Map<String,JsonElement> data) {
+        this.data = data;
+    }
+
+    public String getDisplayText() {
+        return displayText;
+    }
+
+    public void setDisplayText(final String displayText) {
+        this.displayText = displayText;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(final String source) {
+        this.source = source;
+    }
+
+
+    public List<AIOutputContext> getContextOut() {
+        return contextOut;
+    }
+
+    public AIOutputContext getContext(final String name) {
+        if (StringUtils.isEmpty(name)) {
+            throw new IllegalArgumentException("name argument must be not empty");
+        }
+
+        if (contextOut == null) {
+            return null;
+        }
+
+        for (final AIOutputContext c : contextOut) {
+            if (name.equalsIgnoreCase(c.getName())) {
+                return c;
+            }
+        }
+
+        return null;
+    }
+    
+    public void setContextOut(final List<AIOutputContext> contextOut) {
+        this.contextOut = contextOut;
     }
 }
