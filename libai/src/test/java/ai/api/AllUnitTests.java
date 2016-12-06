@@ -30,6 +30,7 @@ import ai.api.model.FulfillmentTest;
 import ai.api.model.MetadataTest;
 import ai.api.model.ResponseMessageTest;
 import ai.api.util.ParametersConverterTest;
+import ai.api.model.ParamsDateTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
@@ -39,7 +40,8 @@ import ai.api.util.ParametersConverterTest;
 	AIServiceContextBuilderTest.class,
 	FulfillmentTest.class,
 	MetadataTest.class,
-	ResponseMessageTest.class
+	ResponseMessageTest.class,
+	ParamsDateTest.class
 	})
 public class AllUnitTests {
 
