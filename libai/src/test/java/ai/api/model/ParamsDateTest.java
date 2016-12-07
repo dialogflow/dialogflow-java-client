@@ -16,25 +16,25 @@ public class ParamsDateTest {
             "    \"parameters\": {\n" +
             "      \"date\": \"\"\n" +
             "    }\n" +
-            "    }";
+            "}";
 
     private static final String ORIGINAL_DATE = "{\n" +
             "    \"parameters\": {\n" +
             "      \"date\": \"tomorrow\"\n" +
             "    }\n" +
-            "    }";
+            "}";
 
     private static final String PARTIAL_DATE = "{\n" +
             "    \"parameters\": {\n" +
             "      \"date\": \"UUUU-04-01\"\n" +
             "    }\n" +
-            "    }";
+            "}";
 
     private static final String RECENT_DATE = "{\n" +
             "    \"parameters\": {\n" +
             "      \"date\": \"2016-04-01\"\n" +
             "    }\n" +
-            "    }";
+            "}";
 
     final static Gson gson = GsonFactory.getDefaultFactory().getGson();
 

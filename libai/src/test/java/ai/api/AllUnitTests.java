@@ -21,16 +21,12 @@ package ai.api;
  *
  ***********************************************************************************************************************/
 
+import ai.api.model.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import ai.api.model.AIResponseTest;
-import ai.api.model.FulfillmentTest;
-import ai.api.model.MetadataTest;
-import ai.api.model.ResponseMessageTest;
 import ai.api.util.ParametersConverterTest;
-import ai.api.model.ParamsDateTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
@@ -41,7 +37,8 @@ import ai.api.model.ParamsDateTest;
 	FulfillmentTest.class,
 	MetadataTest.class,
 	ResponseMessageTest.class,
-	ParamsDateTest.class
+	ParamsDateTest.class,
+	AIEventTest.class
 	})
 public class AllUnitTests {
 

@@ -46,6 +46,9 @@ public class AIRequest extends QuestionMetadata implements Serializable {
     @SerializedName("resetContexts")
     private Boolean resetContexts;
 
+    @SerializedName("event")
+    private AIEvent event;
+
     public AIRequest() {
     }
 
@@ -105,6 +108,11 @@ public class AIRequest extends QuestionMetadata implements Serializable {
         }
 
         contexts.add(aiContext);
+    }
+
+
+    public void setEvent(AIEvent event) {
+        this.event = event;
     }
 
     @Override
