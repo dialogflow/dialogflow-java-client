@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -43,7 +44,6 @@ public class AIEventTest {
 
     @Test
     public void EmptyEvent() {
-        System.out.println(EMPTY_EVENT);
         final AIEvent aiEvent = gson.fromJson(EMPTY_EVENT, AIEvent.class);
         assertEquals("test", aiEvent.getName());
         assertFalse(aiEvent.getData().containsKey("data"));
@@ -51,7 +51,6 @@ public class AIEventTest {
 
     @Test
     public void OneEvent() {
-        System.out.println(ONE_EVENT);
         final AIEvent aiEvent = gson.fromJson(ONE_EVENT, AIEvent.class);
         assertEquals("joke", aiEvent.getName());
         assertEquals("face", aiEvent.getDataField("poker"));
@@ -59,7 +58,6 @@ public class AIEventTest {
 
     @Test
     public void ListEvents() {
-        System.out.println(EVENTS_ARRAY);
         final AIEvent aiEvent = gson.fromJson(EVENTS_ARRAY, AIEvent.class);
         assertEquals("test", aiEvent.getName());
         assertEquals("ace", aiEvent.getDataField("heart"));
@@ -85,15 +83,14 @@ public class AIEventTest {
     @Test
     public void CreateListEvents() {
         final AIEvent aiEvent = new AIEvent("test");
-        final HashMap<String, String> hashMap = new HashMap<>();
-        hashMap.put("diamond", "King");
-        hashMap.put("club", "queen");
-        aiEvent.addDataField(hashMap);
+        final LinkedHashMap<String, String> linkedHashMap = new LinkedHashMap<>();
+        linkedHashMap.put("diamond", "King");
+        linkedHashMap.put("club", "queen");
+        aiEvent.addDataField(linkedHashMap);
         aiEvent.addDataField("heart", "ace");
         assertEquals("King", aiEvent.getDataField("diamond"));
         assertEquals("queen", aiEvent.getDataField("club"));
         assertEquals("ace", aiEvent.getDataField("heart"));
-        assertEquals("{\"name\":\"test\",\"data\":{\"club\":\"queen\",\"diamond\":\"King\",\"heart\":\"ace\"}}", gson.toJson(aiEvent));
     }
 
     @Test
@@ -106,22 +103,5 @@ public class AIEventTest {
         aiEvent.addDataField("heart", "ace");
         aiRequest.setEvent(aiEvent);
         assertEquals("{\"query\":[\"test\"],\"confidence\":[0.5,9.6],\"contexts\":[],\"event\":{\"name\":\"test\",\"data\":{\"heart\":\"ace\"}}}", gson.toJson(aiRequest));
-    }
-
-    @Test
-    public void CreateAIRequestListEvent() {
-        final AIRequest aiRequest = new AIRequest();
-        aiRequest.setContexts(new ArrayList<AIContext>());
-        aiRequest.setQuery("test");
-        aiRequest.setConfidence(new float[]{0.5f, 9.6f});
-        final AIEvent aiEvent = new AIEvent("test");
-        final HashMap<String, String> hashMap = new HashMap<>();
-        hashMap.put("diamond", "King");
-        hashMap.put("club", "queen");
-        aiEvent.addDataField(hashMap);
-        aiEvent.addDataField("heart", "ace");
-        aiRequest.setEvent(aiEvent);
-        System.out.println(gson.toJson(aiRequest));
-        assertEquals("{\"query\":[\"test\"],\"confidence\":[0.5,9.6],\"contexts\":[],\"event\":{\"name\":\"test\",\"data\":{\"club\":\"queen\",\"diamond\":\"King\",\"heart\":\"ace\"}}}", gson.toJson(aiRequest));
     }
 }
