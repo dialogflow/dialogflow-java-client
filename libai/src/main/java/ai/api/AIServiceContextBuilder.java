@@ -26,7 +26,7 @@ import java.util.UUID;
 /**
  * Builds {@link AIServiceContext} to be used in {@link AIDataService} 
  */
-class AIServiceContextBuilder {
+public class AIServiceContextBuilder {
 	
 	String sessionId;
 	
