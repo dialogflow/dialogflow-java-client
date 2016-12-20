@@ -407,6 +407,7 @@ public abstract class ProtocolTestBase {
     }
 
     @Test
+    @SuppressWarnings("Duplicates")
     public void requestEntitiesTest() throws AIServiceException {
         final AIConfiguration config = new AIConfiguration(getAccessToken(),
                 AIConfiguration.SupportedLanguages.English);
@@ -494,6 +495,7 @@ public abstract class ProtocolTestBase {
     }
 
     @Test
+    @SuppressWarnings("Duplicates")
     public void userEntitiesTest() throws AIServiceException{
         final AIConfiguration config = new AIConfiguration(getAccessToken(),
                 AIConfiguration.SupportedLanguages.English);
@@ -546,6 +548,7 @@ public abstract class ProtocolTestBase {
     }
 
     @Test
+    @SuppressWarnings("Duplicates")
     public void userEntitiesCollectionTest() throws AIServiceException {
         final AIConfiguration config = new AIConfiguration(getAccessToken(),
                 AIConfiguration.SupportedLanguages.English);
@@ -612,6 +615,7 @@ public abstract class ProtocolTestBase {
     }
 
     @Test
+    @SuppressWarnings("Duplicates")
     public void extendUserEntitiesTest() throws AIServiceException {
         final AIDataService aiDataService = createDataService();
         final Entity dwarfsEntity = createDwarfsEntity();
