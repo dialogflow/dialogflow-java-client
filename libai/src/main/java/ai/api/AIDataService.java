@@ -58,7 +58,12 @@ public class AIDataService {
     private static final Logger Log = LogManager.getLogger(AIDataService.class);
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
-	/**
+    /**
+     * Cannot be <code>null</code>
+     */
+    private final static Gson GSON = GsonFactory.getDefaultFactory().getGson();
+
+    /**
 	 *  Cannot be <code>null</code>
 	 */
     private final AIConfiguration config;
@@ -67,11 +72,6 @@ public class AIDataService {
      * Cannot be <code>null</code>
      */
     private final AIServiceContext serviceContext;
-
-    /**
-     * Cannot be <code>null</code>
-     */
-    private final Gson gson = GsonFactory.getDefaultFactory().getGson();
 
     /**
      * Create new service for given configuration and some predefined service context 
@@ -143,7 +143,7 @@ public class AIDataService {
                 additionalHeaders = requestExtras.getAdditionalHeaders();
             }
 
-            final String queryData = gson.toJson(request);
+            final String queryData = GSON.toJson(request);
             final String response = doTextRequest(config.getQuestionUrl(serviceContext.getSessionId()), queryData, additionalHeaders);
 
             if (StringUtils.isEmpty(response)) {
@@ -152,7 +152,7 @@ public class AIDataService {
 
             Log.debug("Response json: " + response.replaceAll("[\r\n]+", " "));
 
-            final AIResponse aiResponse = gson.fromJson(response, AIResponse.class);
+            final AIResponse aiResponse = GSON.fromJson(response, AIResponse.class);
 
             if (aiResponse == null) {
                 throw new AIServiceException("API.AI response parsed as null. Check debug log for details.");
@@ -224,7 +224,7 @@ public class AIDataService {
                 additionalHeaders = requestExtras.getAdditionalHeaders();
             }
 
-            final String queryData = gson.toJson(request);
+            final String queryData = GSON.toJson(request);
 
             Log.debug("Request json: " + queryData);
 
@@ -236,7 +236,7 @@ public class AIDataService {
 
             Log.debug("Response json: " + response);
 
-            final AIResponse aiResponse = gson.fromJson(response, AIResponse.class);
+            final AIResponse aiResponse = GSON.fromJson(response, AIResponse.class);
 
             if (aiResponse == null) {
                 throw new AIServiceException("API.AI response parsed as null. Check debug log for details.");
@@ -285,7 +285,7 @@ public class AIDataService {
             throw new AIServiceException("Empty entities list");
         }
 
-        final String requestData = gson.toJson(userEntities);
+        final String requestData = GSON.toJson(userEntities);
         try {
             final String response = doTextRequest(config.getUserEntitiesEndpoint(serviceContext.getSessionId()), requestData);
             if (StringUtils.isEmpty(response)) {
@@ -293,7 +293,7 @@ public class AIDataService {
             }
             Log.debug("Response json: " + response);
 
-            final AIResponse aiResponse = gson.fromJson(response, AIResponse.class);
+            final AIResponse aiResponse = GSON.fromJson(response, AIResponse.class);
 
             if (aiResponse == null) {
                 throw new AIServiceException("API.AI response parsed as null. Check debug log for details.");
