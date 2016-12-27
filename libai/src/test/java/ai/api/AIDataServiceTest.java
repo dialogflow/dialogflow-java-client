@@ -33,10 +33,10 @@ public class AIDataServiceTest {
 		
 		AIRequest request = new AIRequest();
 		
-		dataService.request(request, null);
+		dataService.request(request);
 		assertTrue(endpointValue.get().indexOf("sessionId=customSessionId") == -1);
 		
-		dataService.request(request, null, customContext);
+		dataService.request(request, customContext);
 		assertTrue(endpointValue.get().indexOf("sessionId=customSessionId") > 0);
 	}
 }

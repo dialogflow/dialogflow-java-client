@@ -121,6 +121,17 @@ public class AIDataService {
      * Make request to the AI service.
      *
      * @param request request object to the service. Cannot be <code>null</code>
+     * @param serviceContext custom service context that should be used instead of the default context
+     * @return response object from service. Never <code>null</code>
+     */
+    public AIResponse request(final AIRequest request, final AIServiceContext serviceContext) throws AIServiceException {
+        return request(request, (RequestExtras)null, serviceContext);
+    }
+        
+    /**
+     * Make request to the AI service.
+     *
+     * @param request request object to the service. Cannot be <code>null</code>
      * @param requestExtras object that can hold additional contexts and entities
      * @return response object from service. Never <code>null</code>
      */
