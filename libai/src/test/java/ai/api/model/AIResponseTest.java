@@ -8,6 +8,7 @@ import org.junit.Test;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import ai.api.GsonFactory;
 
@@ -26,7 +27,7 @@ public class AIResponseTest {
             "    \"action\": \"task_create\",\n" +
             "    \"parameters\": {\n" +
             "      \"date\": \"\",\n" +
-            "      \"date-time\": \"2015-03-19T07:00:00"+(new SimpleDateFormat("Z").format(new Date()))+"\",\n" +
+            "      \"date-time\": \"2016-12-21T07:00:00"+(new SimpleDateFormat("Z", Locale.US).format(Calendar.getInstance().getTime()))+"\",\n" +
             "      \"time\": \"\",\n" +
             "      \"text\": \"feed cat\",\n" +
             "      \"priority\": \"\",\n" +
@@ -67,9 +68,9 @@ public class AIResponseTest {
         	final Calendar dateTimeParameter = Calendar.getInstance();
         	dateTimeParameter.setTime(aiResponse.getResult().getDateTimeParameter("date-time"));
 
-            assertEquals(2015, dateTimeParameter.get(Calendar.YEAR));
-            assertEquals(Calendar.MARCH, dateTimeParameter.get(Calendar.MONTH));
-            assertEquals(19, dateTimeParameter.get(Calendar.DATE));
+            assertEquals(2016, dateTimeParameter.get(Calendar.YEAR));
+            assertEquals(Calendar.DECEMBER, dateTimeParameter.get(Calendar.MONTH));
+            assertEquals(21, dateTimeParameter.get(Calendar.DATE));
             assertEquals(7, dateTimeParameter.get(Calendar.HOUR_OF_DAY));
             assertEquals(0, dateTimeParameter.get(Calendar.MINUTE));
 

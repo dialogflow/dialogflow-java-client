@@ -6,7 +6,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
 
 import static org.junit.Assert.assertEquals;
 
@@ -50,14 +49,13 @@ public class ParametersConverterTest {
 
     @Test
     public void parseDateTimeTest() throws ParseException {
-    	
-        final String input = "2015-03-21T07:00:00" + new SimpleDateFormat("Z").format(new Date());
+        final String input = "2016-12-21T07:00:00" + new SimpleDateFormat("Z").format(new Date());
 
         final Calendar date = Calendar.getInstance();
         date.setTime(ParametersConverter.parseDateTime(input));
 
-        assertEquals(2015, date.get(Calendar.YEAR));
-        assertEquals(Calendar.MARCH, date.get(Calendar.MONTH));
+        assertEquals(2016, date.get(Calendar.YEAR));
+        assertEquals(Calendar.DECEMBER, date.get(Calendar.MONTH));
         assertEquals(21, date.get(Calendar.DATE));
         assertEquals(7, date.get(Calendar.HOUR_OF_DAY));
         assertEquals(0, date.get(Calendar.MINUTE));
