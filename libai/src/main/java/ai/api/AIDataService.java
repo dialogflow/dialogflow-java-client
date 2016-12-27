@@ -71,7 +71,7 @@ public class AIDataService {
     /**
      * Cannot be <code>null</code>
      */
-    private final AIServiceContext serviceContext;
+    private final AIServiceContext defaultServiceContext;
 
     /**
      * Create new service for given configuration and some predefined service context 
@@ -85,9 +85,9 @@ public class AIDataService {
     	}
         this.config = config.clone();
         if (serviceContext == null) {
-        	this.serviceContext = new AIServiceContextBuilder().generateSessionId().build();
+        	this.defaultServiceContext = new AIServiceContextBuilder().generateSessionId().build();
         } else {
-        	this.serviceContext = serviceContext;
+        	this.defaultServiceContext = serviceContext;
         }
     }
     
@@ -104,26 +104,39 @@ public class AIDataService {
      * @return Current context used in each request. Never <code>null</code>
      */
     public AIServiceContext getContext() {
-    	return serviceContext;
+    	return defaultServiceContext;
     }
 
     /**
-     * Make request to the ai service.
+     * Make request to the AI service.
      *
      * @param request request object to the service. Cannot be <code>null</code>
      * @return response object from service. Never <code>null</code>
      */
     public AIResponse request(final AIRequest request) throws AIServiceException {
-        return request(request, null);
+        return request(request, (RequestExtras)null);
     }
-
+    
     /**
-     * Make request to the ai service.
+     * Make request to the AI service.
      *
      * @param request request object to the service. Cannot be <code>null</code>
+     * @param requestExtras object that can hold additional contexts and entities
      * @return response object from service. Never <code>null</code>
      */
     public AIResponse request(final AIRequest request, final RequestExtras requestExtras) throws AIServiceException {
+    	return request(request, requestExtras, (AIServiceContext)null);
+    }
+
+    /**
+     * Make request to the AI service.
+     *
+     * @param request request object to the service. Cannot be <code>null</code>
+     * @param requestExtras object that can hold additional contexts and entities
+     * @param serviceContext custom service context that should be used instead of the default context
+     * @return response object from service. Never <code>null</code>
+     */
+    public AIResponse request(final AIRequest request, final RequestExtras requestExtras, final AIServiceContext serviceContext) throws AIServiceException {
         if (request == null) {
             throw new IllegalArgumentException("Request argument must not be null");
         }
@@ -133,7 +146,7 @@ public class AIDataService {
         try {
 
             request.setLanguage(config.getApiAiLanguage());
-            request.setSessionId(serviceContext.getSessionId());
+            request.setSessionId(getSessionId(serviceContext));
             request.setTimezone(Calendar.getInstance().getTimeZone().getID());
 
             Map<String, String> additionalHeaders = null;
@@ -144,7 +157,7 @@ public class AIDataService {
             }
 
             final String queryData = GSON.toJson(request);
-            final String response = doTextRequest(config.getQuestionUrl(serviceContext.getSessionId()), queryData, additionalHeaders);
+            final String response = doTextRequest(config.getQuestionUrl(getSessionId(serviceContext)), queryData, additionalHeaders);
 
             if (StringUtils.isEmpty(response)) {
                 throw new AIServiceException("Empty response from ai service. Please check configuration and Internet connection.");
@@ -176,7 +189,7 @@ public class AIDataService {
     }
 
     /**
-     * Make requests to the ai service with voice data. This method must not be called in the UI Thread.
+     * Make requests to the AI service with voice data.
      *
      * @param voiceStream voice data stream for recognition.  Cannot be <code>null</code>
      * @return response object from service. Never <code>null</code>
@@ -187,7 +200,7 @@ public class AIDataService {
     }
 
     /**
-     * Make requests to the ai service with voice data. This method must not be called in the UI Thread.
+     * Make requests to the AI service with voice data.
      *
      * @param voiceStream voice data stream for recognition. Cannot be <code>null</code>
      * @param aiContexts additional contexts for request
@@ -197,9 +210,9 @@ public class AIDataService {
     public AIResponse voiceRequest(final InputStream voiceStream, final List<AIContext> aiContexts) throws AIServiceException {
         return voiceRequest(voiceStream, new RequestExtras(aiContexts, null));
     }
-
+    
     /**
-     * Make requests to the ai service with voice data. This method must not be called in the UI Thread.
+     * Make requests to the AI service with voice data.
      *
      * @param voiceStream voice data stream for recognition. Cannot be <code>null</code>
      * @param requestExtras object that can hold additional contexts and entities
@@ -207,6 +220,19 @@ public class AIDataService {
      * @throws AIServiceException
      */
     public AIResponse voiceRequest(final InputStream voiceStream, final RequestExtras requestExtras) throws AIServiceException {
+    	return voiceRequest(voiceStream, requestExtras, (AIServiceContext)null);
+    }
+
+    /**
+     * Make requests to the AI service with voice data.
+     *
+     * @param voiceStream voice data stream for recognition. Cannot be <code>null</code>
+     * @param requestExtras object that can hold additional contexts and entities
+     * @param serviceContext custom service context that should be used instead of the default context
+     * @return response object from service. Never <code>null</code>
+     * @throws AIServiceException
+     */
+    public AIResponse voiceRequest(final InputStream voiceStream, final RequestExtras requestExtras, final AIServiceContext serviceContext) throws AIServiceException {
     	assert voiceStream != null;
         Log.debug("Start voice request");
 
@@ -214,7 +240,7 @@ public class AIDataService {
             final AIRequest request = new AIRequest();
 
             request.setLanguage(config.getApiAiLanguage());
-            request.setSessionId(serviceContext.getSessionId());
+            request.setSessionId(getSessionId(serviceContext));
             request.setTimezone(Calendar.getInstance().getTimeZone().getID());
 
             Map<String, String> additionalHeaders = null;
@@ -276,18 +302,56 @@ public class AIDataService {
         }
     }
 
+    /**
+     * Add new entity to an agent entity list
+     * 
+     * @param userEntity new entity data
+     * @return response object from service. Never <code>null</code>
+     * @throws AIServiceException
+     */
     public AIResponse uploadUserEntity(final Entity userEntity) throws AIServiceException {
-        return uploadUserEntities(Collections.singleton(userEntity));
+        return uploadUserEntity(userEntity, (AIServiceContext)null);
+    }
+    
+    /**
+     * Add new entity to an agent entity list
+     * 
+     * @param userEntity new entity data
+     * @param serviceContext custom service context that should be used instead of the default context
+     * @return response object from service. Never <code>null</code>
+     * @throws AIServiceException
+     */
+    public AIResponse uploadUserEntity(final Entity userEntity, AIServiceContext serviceContext) throws AIServiceException {
+        return uploadUserEntities(Collections.singleton(userEntity), serviceContext);
+    }
+    
+    /**
+     * Add a bunch of new entity to an agent entity list
+     * 
+     * @param userEntities collection of a new entity data
+     * @return response object from service. Never <code>null</code>
+     * @throws AIServiceException
+     */
+    public AIResponse uploadUserEntities(final Collection<Entity> userEntities) throws AIServiceException {
+    	return uploadUserEntities(userEntities, (AIServiceContext)null);
     }
 
-    public AIResponse uploadUserEntities(final Collection<Entity> userEntities) throws AIServiceException {
+    /**
+     * Add a bunch of new entity to an agent entity list
+     * 
+     * @param userEntities collection of a new entity data
+     * @param serviceContext custom service context that should be used instead of the default context
+     * @return response object from service. Never <code>null</code>
+     * @throws AIServiceException
+     */
+    public AIResponse uploadUserEntities(final Collection<Entity> userEntities, AIServiceContext serviceContext) throws AIServiceException {
         if (userEntities == null || userEntities.size() == 0) {
             throw new AIServiceException("Empty entities list");
         }
 
         final String requestData = GSON.toJson(userEntities);
         try {
-            final String response = doTextRequest(config.getUserEntitiesEndpoint(serviceContext.getSessionId()), requestData);
+            final String response = doTextRequest(config.getUserEntitiesEndpoint(getSessionId(serviceContext)), requestData);
             if (StringUtils.isEmpty(response)) {
                 throw new AIServiceException("Empty response from ai service. Please check configuration and Internet connection.");
             }
@@ -313,17 +377,40 @@ public class AIDataService {
             throw new AIServiceException("Wrong service answer format. Please, connect to API.AI Service support", je);
         }
     }
-
-    protected String doTextRequest(final String requestJson) throws MalformedURLException, AIServiceException {
-        return doTextRequest(config.getQuestionUrl(serviceContext.getSessionId()), requestJson);
+    
+    /**
+     * @param requestJson Cannot be <code>null</code>
+     * @param serviceContext custom service context that should be used instead of the default context
+     * @return
+     * @throws MalformedURLException
+     * @throws AIServiceException
+     */
+    protected String doTextRequest(final String requestJson, AIServiceContext serviceContext) throws MalformedURLException, AIServiceException {
+        return doTextRequest(config.getQuestionUrl(getSessionId(serviceContext)), requestJson);
     }
 
+    /**
+     * @param requestJson Cannot be <code>null</code>
+     * @return
+     * @throws MalformedURLException
+     * @throws AIServiceException
+     */
+    protected String doTextRequest(final String requestJson) throws MalformedURLException, AIServiceException {
+        return doTextRequest(requestJson, (AIServiceContext)null);
+    }
+
+    /**
+     * @param endpoint Cannot be <code>null</code>
+     * @param requestJson Cannot be <code>null</code>
+     * @return
+     * @throws MalformedURLException
+     * @throws AIServiceException
+     */
     protected String doTextRequest(final String endpoint, final String requestJson) throws MalformedURLException, AIServiceException {
         return doTextRequest(endpoint, requestJson, null);
     }
     
     /**
-     * 
      * @param endpoint Cannot be <code>null</code>
      * @param requestJson Cannot be <code>null</code>
      * @param additionalHeaders
@@ -409,7 +496,18 @@ public class AIDataService {
      * @param queryData Cannot be <code>null</code>
      */
     protected String doSoundRequest(final InputStream voiceStream, final String queryData) throws MalformedURLException, AIServiceException {
-        return doSoundRequest(voiceStream, queryData, null);
+        return doSoundRequest(voiceStream, queryData, null, (AIServiceContext)null);
+    }
+    
+    /**
+     * Method extracted for testing purposes
+     * @param voiceStream Cannot be <code>null</code>
+     * @param queryData Cannot be <code>null</code>
+     */
+    protected String doSoundRequest(final InputStream voiceStream,
+                                    final String queryData,
+                                    final Map<String, String> additionalHeaders) throws MalformedURLException, AIServiceException {
+    	return doSoundRequest(voiceStream, queryData, additionalHeaders, (AIServiceContext)null);
     }
 
     /**
@@ -419,7 +517,9 @@ public class AIDataService {
      */
     protected String doSoundRequest(final InputStream voiceStream,
                                     final String queryData,
-                                    final Map<String, String> additionalHeaders) throws MalformedURLException, AIServiceException {
+                                    final Map<String, String> additionalHeaders,
+                                    final AIServiceContext serviceContext) throws MalformedURLException, AIServiceException {
+    	
 
     	assert voiceStream != null;
     	assert queryData != null;
@@ -427,7 +527,7 @@ public class AIDataService {
         HttpClient httpClient = null;
 
         try {
-            final URL url = new URL(config.getQuestionUrl(serviceContext.getSessionId()));
+            final URL url = new URL(config.getQuestionUrl(getSessionId(serviceContext)));
             
             Log.debug("Connecting to {}", url);
 
@@ -500,5 +600,9 @@ public class AIDataService {
         if (requestExtras.getLocation() != null) {
             request.setLocation(requestExtras.getLocation());
         }
+    }
+    
+    private String getSessionId(AIServiceContext serviceContext) {
+    	return serviceContext != null ? serviceContext.getSessionId() : defaultServiceContext.getSessionId();
     }
 }

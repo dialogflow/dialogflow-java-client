@@ -38,7 +38,8 @@ import ai.api.util.ParametersConverterTest;
 	MetadataTest.class,
 	ResponseMessageTest.class,
 	ParamsDateTest.class,
-	AIEventTest.class
+	AIEventTest.class,
+	AIDataServiceTest.class
 	})
 public class AllUnitTests {
 
