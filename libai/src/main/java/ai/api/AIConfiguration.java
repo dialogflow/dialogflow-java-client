@@ -1,5 +1,7 @@
 package ai.api;
 
+import java.io.UnsupportedEncodingException;
+
 /***********************************************************************************************************************
  *
  * API.AI Java SDK - client-side libraries for API.AI
@@ -22,6 +24,8 @@ package ai.api;
  ***********************************************************************************************************************/
 
 import java.net.Proxy;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,6 +40,7 @@ public class AIConfiguration implements Cloneable {
     protected static final String CURRENT_PROTOCOL_VERSION = "20150910";
     protected static final String QUESTION_ENDPOINT = "query";
     protected static final String USER_ENTITIES_ENDPOINT = "userEntities";
+    protected static final String CONTEXTS_ENDPOINT = "contexts";
 
     private final String apiKey;
     private final SupportedLanguages language;
@@ -185,6 +190,29 @@ public class AIConfiguration implements Cloneable {
         } else {
         	return String.format("%s%s?v=%s&sessionId=%s", serviceUrl, USER_ENTITIES_ENDPOINT, protocolVersion, sessionId);
         }
+    }
+    
+    String getContextsUrl(final String sessionId) {
+    	return getContextsUrl(sessionId, "");
+    }
+    
+    String getContextsUrl(final String sessionId, final String suffix) {
+    	StringBuilder result = new StringBuilder();
+    	result.append(serviceUrl).append(CONTEXTS_ENDPOINT);
+    	if (!StringUtils.isEmpty(suffix)) {
+			try {
+				result.append("/").append(URLEncoder.encode(suffix, StandardCharsets.UTF_8.name()));
+			} catch (UnsupportedEncodingException e) {
+				// This is unexpected due to encoding value is defined as constant string
+				throw new RuntimeException(e);
+			}
+    	}
+    	result.append("?");
+    	if (!StringUtils.isEmpty(protocolVersion)) {
+    		result.append("v=").append(protocolVersion).append("&");
+    	}
+    	result.append("sessionId=").append(sessionId);
+    	return result.toString();
     }
     
     private static Map<String, SupportedLanguages> STRING_TO_LANGUAGE = new HashMap<>();

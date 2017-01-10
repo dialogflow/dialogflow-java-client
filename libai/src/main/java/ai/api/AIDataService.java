@@ -22,6 +22,7 @@ package ai.api;
  ***********************************************************************************************************************/
 
 import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 
 import ai.api.util.IOUtils;
@@ -31,6 +32,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.net.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -57,6 +59,11 @@ public class AIDataService {
 
     private static final Logger Log = LogManager.getLogger(AIDataService.class);
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
+    private static final AIServiceContext UNDEFINED_SERVICE_CONTEXT = null;
+    private static final String REQUEST_METHOD_POST = "POST";
+    private static final String REQUEST_METHOD_DELETE = "DELETE";
+    private static final String REQUEST_METHOD_GET = "GET";
+    private static final String DEFAULT_REQUEST_METHOD = REQUEST_METHOD_POST;
 
     /**
      * Cannot be <code>null</code>
@@ -136,7 +143,7 @@ public class AIDataService {
      * @return response object from service. Never <code>null</code>
      */
     public AIResponse request(final AIRequest request, final RequestExtras requestExtras) throws AIServiceException {
-    	return request(request, requestExtras, (AIServiceContext)null);
+    	return request(request, requestExtras, UNDEFINED_SERVICE_CONTEXT);
     }
 
     /**
@@ -231,7 +238,7 @@ public class AIDataService {
      * @throws AIServiceException
      */
     public AIResponse voiceRequest(final InputStream voiceStream, final RequestExtras requestExtras) throws AIServiceException {
-    	return voiceRequest(voiceStream, requestExtras, (AIServiceContext)null);
+    	return voiceRequest(voiceStream, requestExtras, UNDEFINED_SERVICE_CONTEXT);
     }
 
     /**
@@ -312,6 +319,202 @@ public class AIDataService {
             return false;
         }
     }
+    
+    /**
+     * Retrieves the list of all currently active contexts for a session
+     * 
+     * @param serviceContext custom service context that should be used instead of the default context
+     * @return List of contexts, or empty list if there is no any active contexts
+     * @throws AIServiceException
+     */
+    public List<AIContext> getActiveContexts() 
+    		throws AIServiceException {
+    	return getActiveContexts(UNDEFINED_SERVICE_CONTEXT);
+    }
+    
+    /**
+     * Retrieves the list of all currently active contexts for a session
+     * @param serviceContext custom service context that should be used instead of the default context
+     * @return List of contexts, or empty list if there is no any active contexts
+     * @throws AIServiceException
+     */
+    public List<AIContext> getActiveContexts(final AIServiceContext serviceContext)
+    		throws AIServiceException {
+    	try {
+			return doRequest(
+					ApiActiveContextListResponse.class,
+					config.getContextsUrl(getSessionId(serviceContext)),
+					REQUEST_METHOD_GET);
+		} catch (BadResponseStatusException e) {
+			throw new AIServiceException(e.response);
+		}
+    }
+    
+    /**
+     * Retrieves the specified context for a session
+     * @param contextName The context name
+     * @return <code>null</code> if context not found
+     * @throws AIServiceException
+     */
+    public AIContext getActiveContext(final String contextName)
+    		throws AIServiceException {
+    	return getActiveContext(contextName, UNDEFINED_SERVICE_CONTEXT);
+    }
+    
+    /**
+     * Retrieves the specified context for a session
+     * @param contextName The context name
+     * @param serviceContext custom service context that should be used instead of the default context
+     * @return <code>null</code> if context not found
+     * @throws AIServiceException
+     */
+    public AIContext getActiveContext(final String contextName, final AIServiceContext serviceContext)
+    		throws AIServiceException {
+    	try {
+			return doRequest(
+					AIContext.class,
+					config.getContextsUrl(getSessionId(serviceContext), contextName),
+					REQUEST_METHOD_GET);
+		} catch (BadResponseStatusException e) {
+			if (e.response.getStatus().getCode() == 404) {
+				return null;
+			} else {
+				throw new AIServiceException(e.response);
+			}
+		}
+    }
+    
+    /**
+     * Adds new active contexts for a session
+     * @param contexts Iterable collection of contexts
+     * @return List of added context names, or empty list if no contexts were added
+     * @throws AIServiceException
+     */
+    public List<String> addActiveContext(final Iterable<AIContext> contexts)
+    		throws AIServiceException {
+    	return addActiveContext(contexts, UNDEFINED_SERVICE_CONTEXT);
+    }
+    
+    /**
+     * Adds new active contexts for a session
+     * @param contexts Iterable collection of contexts
+     * @param serviceContext custom service context that should be used instead of the default context
+     * @return List of added context names, or empty list if no contexts were added
+     * @throws AIServiceException
+     */
+    public List<String> addActiveContext(final Iterable<AIContext> contexts, final AIServiceContext serviceContext)
+    		 throws AIServiceException {
+    	ApiActiveContextNamesResponse response;
+		try {
+			response = doRequest(
+					contexts,
+					ApiActiveContextNamesResponse.class,
+					config.getContextsUrl(getSessionId(serviceContext)),
+					REQUEST_METHOD_POST);
+			return response.names;
+		} catch (BadResponseStatusException e) {
+			throw new AIServiceException(e.response);
+		}
+    }
+    
+    /**
+     * Adds new active context for a session
+     * @param context New context
+     * @return Name of added context
+     * @throws AIServiceException
+     */
+    public String addActiveContext(final AIContext context)
+    		throws AIServiceException {
+    	return addActiveContext(context, UNDEFINED_SERVICE_CONTEXT);
+    }
+    
+    /**
+     * Adds new active context for a session
+     * @param context New context
+     * @param serviceContext custom service context that should be used instead of the default context
+     * @return Name of added context
+     * @throws AIServiceException
+     */
+    public String addActiveContext(final AIContext context, final AIServiceContext serviceContext)
+    		throws AIServiceException {
+    	ApiActiveContextNamesResponse response;
+		try {
+			response = doRequest(
+					context,
+					ApiActiveContextNamesResponse.class,
+					config.getContextsUrl(getSessionId(serviceContext)),
+					REQUEST_METHOD_POST);
+			return response.names != null && response.names.size() > 0 ? response.names.get(0) : null;
+		} catch (BadResponseStatusException e) {
+			throw new AIServiceException(e.response);
+		}
+    }
+    
+    /**
+     * Deletes all active contexts for a session
+     * 
+     * @throws AIServiceException
+     */
+    public void resetActiveContexts() 
+    		throws AIServiceException {
+    	resetActiveContexts(UNDEFINED_SERVICE_CONTEXT);
+    }
+    
+    /**
+     * Deletes all active contexts for a session
+     * 
+     * @param serviceContext custom service context that should be used instead of the default context
+     * @throws AIServiceException
+     */
+    public void resetActiveContexts(final AIServiceContext serviceContext) 
+    		throws AIServiceException {
+    	try {
+			doRequest(
+					AIResponse.class,
+					config.getContextsUrl(getSessionId(serviceContext)),
+					REQUEST_METHOD_DELETE);
+		} catch (BadResponseStatusException e) {
+			throw new AIServiceException(e.response);
+		}
+    }
+    
+    /**
+     * Deletes the specified context for a session
+     * 
+     * @param contextName The context name
+     * @return <code>false</code> if context was not delete, <code>true</code> in otherwise case
+     * @throws AIServiceException
+     */
+    public boolean removeActiveContext(final String contextName) 
+    		throws AIServiceException {
+    	return removeActiveContext(contextName, UNDEFINED_SERVICE_CONTEXT);
+    }
+    
+    /**
+     * Deletes the specified context for a session
+     * 
+     * @param contextName The context name
+     * @param serviceContext custom service context that should be used instead of the default context
+     * @return <code>false</code> if context was not delete, <code>true</code> in otherwise case
+     * @throws AIServiceException
+     */
+    public boolean removeActiveContext(final String contextName, final AIServiceContext serviceContext) 
+    		throws AIServiceException {
+    	
+		try {
+			doRequest(
+					AIResponse.class,
+					config.getContextsUrl(getSessionId(serviceContext), contextName),
+					REQUEST_METHOD_DELETE);
+			return true;
+		} catch (BadResponseStatusException e) {
+			if (e.response.getStatus().getCode() == 404) {
+				return false;
+			} else {
+				throw new AIServiceException(e.response);
+			}
+		}
+    }
 
     /**
      * Add new entity to an agent entity list
@@ -321,7 +524,7 @@ public class AIDataService {
      * @throws AIServiceException
      */
     public AIResponse uploadUserEntity(final Entity userEntity) throws AIServiceException {
-        return uploadUserEntity(userEntity, (AIServiceContext)null);
+        return uploadUserEntity(userEntity, UNDEFINED_SERVICE_CONTEXT);
     }
     
     /**
@@ -344,7 +547,7 @@ public class AIDataService {
      * @throws AIServiceException
      */
     public AIResponse uploadUserEntities(final Collection<Entity> userEntities) throws AIServiceException {
-    	return uploadUserEntities(userEntities, (AIServiceContext)null);
+    	return uploadUserEntities(userEntities, UNDEFINED_SERVICE_CONTEXT);
     }
 
     /**
@@ -407,7 +610,7 @@ public class AIDataService {
      * @throws AIServiceException
      */
     protected String doTextRequest(final String requestJson) throws MalformedURLException, AIServiceException {
-        return doTextRequest(requestJson, (AIServiceContext)null);
+        return doTextRequest(requestJson, UNDEFINED_SERVICE_CONTEXT);
     }
 
     /**
@@ -432,7 +635,7 @@ public class AIDataService {
     protected String doTextRequest(final String endpoint,
                                    final String requestJson, 
                                    final Map<String, String> additionalHeaders) throws MalformedURLException, AIServiceException {
-
+    	// TODO call doRequest method
     	assert endpoint != null;
     	assert requestJson != null;
         HttpURLConnection connection = null;
@@ -507,7 +710,7 @@ public class AIDataService {
      * @param queryData Cannot be <code>null</code>
      */
     protected String doSoundRequest(final InputStream voiceStream, final String queryData) throws MalformedURLException, AIServiceException {
-        return doSoundRequest(voiceStream, queryData, null, (AIServiceContext)null);
+        return doSoundRequest(voiceStream, queryData, null, UNDEFINED_SERVICE_CONTEXT);
     }
     
     /**
@@ -518,7 +721,7 @@ public class AIDataService {
     protected String doSoundRequest(final InputStream voiceStream,
                                     final String queryData,
                                     final Map<String, String> additionalHeaders) throws MalformedURLException, AIServiceException {
-    	return doSoundRequest(voiceStream, queryData, additionalHeaders, (AIServiceContext)null);
+    	return doSoundRequest(voiceStream, queryData, additionalHeaders, UNDEFINED_SERVICE_CONTEXT);
     }
 
     /**
@@ -531,7 +734,7 @@ public class AIDataService {
                                     final Map<String, String> additionalHeaders,
                                     final AIServiceContext serviceContext) throws MalformedURLException, AIServiceException {
     	
-
+    	// TODO call doRequest method
     	assert voiceStream != null;
     	assert queryData != null;
         HttpURLConnection connection = null;
@@ -596,6 +799,126 @@ public class AIDataService {
             }
         }
     }
+    
+    protected <TResponse> TResponse doRequest(
+    		final Type responseType,
+    		final String endpoint,
+    		final String method)
+    		throws AIServiceException, BadResponseStatusException {
+    	return doRequest(responseType, endpoint, method, (Map<String, String>)null);
+    }
+    
+    protected <TRequest,TResponse> TResponse doRequest(
+    		final TRequest request,
+    		final Type responseType,
+    		final String endpoint,
+    		final String method)
+    		throws AIServiceException, BadResponseStatusException {
+    	return doRequest(request, responseType, endpoint, method, (Map<String, String>)null);
+    }
+    
+    protected <TResponse> TResponse doRequest(
+    		final Type responseType,
+    		final String endpoint,
+    		final String method,
+    		final Map<String, String> additionalHeaders)
+    		throws AIServiceException, BadResponseStatusException {
+    	return doRequest((Object)null, responseType, endpoint, method, additionalHeaders);
+    }
+    
+    protected <TRequest,TResponse> TResponse doRequest(
+    		final TRequest request,
+    		final Type responseType,
+    		final String endpoint,
+    		final String method,
+    		final Map<String, String> additionalHeaders)
+    		throws AIServiceException, BadResponseStatusException {
+
+    	assert endpoint != null;
+        HttpURLConnection connection = null;
+
+        try {
+
+            final URL url = new URL(endpoint);
+
+            final String queryData = request != null ? GSON.toJson(request) : null;
+            final String requestMethod = method != null ? method : DEFAULT_REQUEST_METHOD;
+
+
+            Log.debug("Request json: " + queryData);
+
+            if (config.getProxy() != null) {
+                connection = (HttpURLConnection) url.openConnection(config.getProxy());
+            } else {
+                connection = (HttpURLConnection) url.openConnection();
+            }
+            
+            if (queryData != null && ! REQUEST_METHOD_POST.equals(requestMethod)) {
+            	throw new AIServiceException("Non-empty request should be sent using POST method");
+            }
+
+            connection.setRequestMethod(requestMethod);
+            if (REQUEST_METHOD_POST.equals(requestMethod)) {
+            	connection.setDoOutput(true);
+            }
+            connection.addRequestProperty("Authorization", "Bearer " + config.getApiKey());
+            connection.addRequestProperty("Content-Type", "application/json; charset=utf-8");
+            connection.addRequestProperty("Accept", "application/json");
+
+            if (additionalHeaders != null) {
+                for (final Map.Entry<String, String> entry : additionalHeaders.entrySet()) {
+                    connection.addRequestProperty(entry.getKey(), entry.getValue());
+                }
+            }
+
+            connection.connect();
+
+            if (queryData != null) {
+	            final BufferedOutputStream outputStream = new BufferedOutputStream(connection.getOutputStream());
+	            IOUtils.writeAll(queryData, outputStream, DEFAULT_CHARSET);
+	            outputStream.close();
+            }
+
+            final InputStream inputStream = new BufferedInputStream(connection.getInputStream());
+            final String response = IOUtils.readAll(inputStream, DEFAULT_CHARSET);
+            inputStream.close();
+            
+            try {
+	            AIResponse aiResponse = GSON.fromJson(response, AIResponse.class);
+	            
+	            if (aiResponse.getStatus() != null && aiResponse.getStatus().getCode() != 200) {
+	            	throw new BadResponseStatusException(aiResponse);
+	            }
+            } catch (JsonParseException e) {
+            	// response is not in a expected format
+            }
+
+            return GSON.fromJson(response, responseType);
+        } catch (final IOException e) {
+            if (connection != null) {
+                try {
+                    final InputStream errorStream = connection.getErrorStream();
+                    if (errorStream != null) {
+                        final String errorString = IOUtils.readAll(errorStream, DEFAULT_CHARSET);
+                        Log.debug(errorString);
+                        throw new AIServiceException(errorString, e);
+                    }
+                    else {
+                        throw new AIServiceException("Can't connect to the api.ai service.", e);
+                    }
+                } catch (final IOException ex) {
+                    Log.warn("Can't read error response", ex);
+                }
+            }
+            Log.error("Can't make request to the API.AI service. Please, check connection settings and API access token.", e);
+            throw new AIServiceException("Can't make request to the API.AI service. Please, check connection settings and API access token.", e);
+
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
+        }
+    }
 
     private void fillRequest(final AIRequest request, final RequestExtras requestExtras) {
     	assert request != null;
@@ -615,5 +938,26 @@ public class AIDataService {
     
     private String getSessionId(AIServiceContext serviceContext) {
     	return serviceContext != null ? serviceContext.getSessionId() : defaultServiceContext.getSessionId();
+    }
+    
+    private static class ApiActiveContextNamesResponse extends AIResponse {
+    	
+		private static final long serialVersionUID = 1L;
+		
+		public List<String> names; 
+    }
+    
+    private static interface ApiActiveContextListResponse extends List<AIContext> {
+    }
+    
+    private static class BadResponseStatusException extends Exception {
+
+    	private static final long serialVersionUID = 1L;
+		
+		private final AIResponse response;
+    	
+    	public BadResponseStatusException(final AIResponse response) {
+    		this.response = response;
+    	}
     }
 }
