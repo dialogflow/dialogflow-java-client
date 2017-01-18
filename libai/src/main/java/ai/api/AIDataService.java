@@ -323,7 +323,6 @@ public class AIDataService {
     /**
      * Retrieves the list of all currently active contexts for a session
      * 
-     * @param serviceContext custom service context that should be used instead of the default context
      * @return List of contexts, or empty list if there is no any active contexts
      * @throws AIServiceException
      */
@@ -595,7 +594,7 @@ public class AIDataService {
     /**
      * @param requestJson Cannot be <code>null</code>
      * @param serviceContext custom service context that should be used instead of the default context
-     * @return
+     * @return Response string
      * @throws MalformedURLException
      * @throws AIServiceException
      */
@@ -605,7 +604,7 @@ public class AIDataService {
 
     /**
      * @param requestJson Cannot be <code>null</code>
-     * @return
+     * @return Response string
      * @throws MalformedURLException
      * @throws AIServiceException
      */
@@ -616,7 +615,7 @@ public class AIDataService {
     /**
      * @param endpoint Cannot be <code>null</code>
      * @param requestJson Cannot be <code>null</code>
-     * @return
+     * @return Response string
      * @throws MalformedURLException
      * @throws AIServiceException
      */
@@ -628,7 +627,7 @@ public class AIDataService {
      * @param endpoint Cannot be <code>null</code>
      * @param requestJson Cannot be <code>null</code>
      * @param additionalHeaders
-     * @return
+     * @return Response string
      * @throws MalformedURLException
      * @throws AIServiceException
      */
