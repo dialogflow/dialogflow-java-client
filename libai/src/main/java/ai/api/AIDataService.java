@@ -34,8 +34,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.net.*;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
@@ -58,7 +56,6 @@ import ai.api.model.Status;
 public class AIDataService {
 
     private static final Logger Log = LogManager.getLogger(AIDataService.class);
-    private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
     private static final AIServiceContext UNDEFINED_SERVICE_CONTEXT = null;
     private static final String REQUEST_METHOD_POST = "POST";
     private static final String REQUEST_METHOD_DELETE = "DELETE";
@@ -668,11 +665,11 @@ public class AIDataService {
             connection.connect();
 
             final BufferedOutputStream outputStream = new BufferedOutputStream(connection.getOutputStream());
-            IOUtils.writeAll(queryData, outputStream, DEFAULT_CHARSET);
+            IOUtils.writeAll(queryData, outputStream);
             outputStream.close();
 
             final InputStream inputStream = new BufferedInputStream(connection.getInputStream());
-            final String response = IOUtils.readAll(inputStream, DEFAULT_CHARSET);
+            final String response = IOUtils.readAll(inputStream);
             inputStream.close();
 
             return response;
@@ -681,7 +678,7 @@ public class AIDataService {
                 try {
                     final InputStream errorStream = connection.getErrorStream();
                     if (errorStream != null) {
-                        final String errorString = IOUtils.readAll(errorStream, DEFAULT_CHARSET);
+                        final String errorString = IOUtils.readAll(errorStream);
                         Log.debug(errorString);
                         return errorString;
                     }
@@ -874,12 +871,12 @@ public class AIDataService {
 
             if (queryData != null) {
 	            final BufferedOutputStream outputStream = new BufferedOutputStream(connection.getOutputStream());
-	            IOUtils.writeAll(queryData, outputStream, DEFAULT_CHARSET);
+	            IOUtils.writeAll(queryData, outputStream);
 	            outputStream.close();
             }
 
             final InputStream inputStream = new BufferedInputStream(connection.getInputStream());
-            final String response = IOUtils.readAll(inputStream, DEFAULT_CHARSET);
+            final String response = IOUtils.readAll(inputStream);
             inputStream.close();
             
             try {
@@ -898,7 +895,7 @@ public class AIDataService {
                 try {
                     final InputStream errorStream = connection.getErrorStream();
                     if (errorStream != null) {
-                        final String errorString = IOUtils.readAll(errorStream, DEFAULT_CHARSET);
+                        final String errorString = IOUtils.readAll(errorStream);
                         Log.debug(errorString);
                         throw new AIServiceException(errorString, e);
                     }

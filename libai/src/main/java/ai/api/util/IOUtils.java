@@ -15,6 +15,7 @@ import java.nio.charset.Charset;
 public class IOUtils {
 
 	private static final int DEFAULT_BUFFER_SIZE = 4096;
+	private static final String DEFAULT_CHARSET = "UTF-8";
 	
 	/**
 	 * Write string to byte stream
@@ -26,9 +27,34 @@ public class IOUtils {
 	public static void writeAll(String data, OutputStream outputStream, Charset charset)
 		throws IOException 
 	{
+		writeAll(data, outputStream, charset.name());
+	}
+	
+	/**
+	 * Write string to byte stream
+	 * @param data Source string
+	 * @param outputStream Output stream
+	 * @param charset Convert string to bytes according to given
+	 * @throws IOException
+	 */
+	public static void writeAll(String data, OutputStream outputStream, String charset)
+		throws IOException 
+	{
 		if ((data != null) && (data.length() > 0)) {
 			outputStream.write(data.getBytes(charset));
 		}
+	}
+	
+	/**
+	 * Write string to byte stream
+	 * @param data Source string
+	 * @param outputStream Output stream
+	 * @throws IOException
+	 */
+	public static void writeAll(String data, OutputStream outputStream)
+		throws IOException 
+	{
+		writeAll(data, outputStream, DEFAULT_CHARSET);
 	}
 
 	/**
@@ -39,9 +65,30 @@ public class IOUtils {
 	 * @throws IOException
 	 */
 	public  static String readAll(InputStream inputStream, Charset charset) throws IOException {
+		return readAll(inputStream, charset.name());
+	}
+	
+	/**
+	 * Read all stream byte data into {@link String}
+	 * @param inputStream Source stream
+	 * @param charset Convert bytes to chars according to given
+	 * @return Empty {@link String} if there was no data in stream
+	 * @throws IOException
+	 */
+	public  static String readAll(InputStream inputStream, String charset) throws IOException {
 		try (InputStreamReader streamReader = new InputStreamReader(inputStream, charset)) {
 			return readAll(streamReader);
 		}
+	}
+	
+	/**
+	 * Read all stream byte data into {@link String}
+	 * @param inputStream Source stream
+	 * @return Empty {@link String} if there was no data in stream
+	 * @throws IOException
+	 */
+	public  static String readAll(InputStream inputStream) throws IOException {
+		return readAll(inputStream, DEFAULT_CHARSET);
 	}
 	
 	/**
