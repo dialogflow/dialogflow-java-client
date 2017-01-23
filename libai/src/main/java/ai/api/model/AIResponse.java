@@ -26,6 +26,8 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 public class AIResponse implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -116,12 +118,7 @@ public class AIResponse implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("AIResponse{id='%s', timestamp=%s, result=%s, status=%s, sessionId=%s}",
-                id,
-                timestamp,
-                result,
-                status,
-        		sessionId);
+    	return ToStringBuilder.reflectionToString(this);
     }
 
     public void cleanup() {
