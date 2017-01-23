@@ -1,10 +1,10 @@
 package ai.api;
 
-public class CustomAIServceContext implements AIServiceContext{
+public class CustomAIServiceContext implements AIServiceContext{
 
 	private String sessionId;
 
-	public CustomAIServceContext(String sessionId){
+	public CustomAIServiceContext(String sessionId){
 		this.sessionId = sessionId;
 	}
 	

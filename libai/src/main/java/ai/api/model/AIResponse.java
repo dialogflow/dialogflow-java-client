@@ -29,101 +29,106 @@ import java.util.Date;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class AIResponse implements Serializable {
-
+	
 	private static final long serialVersionUID = 1L;
 	
-    /**
-     * Unique identifier of the result.
-     */
-    @SerializedName("id")
-    private String id;
-
-    @SerializedName("timestamp")
-    private Date timestamp;
-
-    /**
-     * Result object
-     */
-    @SerializedName("result")
-    private Result result;
-
-    @SerializedName("status")
-    private Status status;
-    
-    @SerializedName("sessionId")
-    private String sessionId;
-
-    /**
-     * Unique identifier of the result.
-     */
-    public String getId() {
-        return id;
-    }
-
-    public void setId(final String id) {
-        this.id = id;
-    }
-
-    /**
-     * Date and time of the request in UTC timezone using ISO-8601 format.
-     */
-    public Date getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(final Date timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    /**
-     * Contains the results of the natual language processing.
-     */
-    public Result getResult() {
-        return result;
-    }
-
-    public void setResult(final Result result) {
-        this.result = result;
-    }
-
-    /**
-     * Contains data on how the request succeeded or failed.
-     */
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(final Status status) {
-        this.status = status;
-    }
-    
-    /**
-     * Session ID
-     */
-    public String getSessionId() {
-    	return sessionId;
-    }
-    
-    public void setSessionId(String sessionId) {
-    	this.sessionId = sessionId;
-    }
-
-    public boolean isError() {
-        if (status != null && status.getCode() != null && status.getCode() >= 400) {
-            return true;
-        }
-
-        return false;
-    }
-
-    @Override
-    public String toString() {
-    	return ToStringBuilder.reflectionToString(this);
-    }
-
-    public void cleanup() {
-        if (result != null) {
-            result.trimParameters();
-        }
-    }
+	/**
+	 * Unique identifier of the result.
+	 */
+	@SerializedName("id")
+	private String id;
+	
+	@SerializedName("timestamp")
+	private Date timestamp;
+	
+	/**
+	 * Result object
+	 */
+	@SerializedName("result")
+	private Result result;
+	
+	@SerializedName("status")
+	private Status status;
+	
+	@SerializedName("sessionId")
+	private String sessionId;
+	
+	/**
+	 * Unique identifier of the result.
+	 */
+	public String getId() {
+		return id;
+	}
+	
+	public void setId(final String id) {
+		this.id = id;
+	}
+	
+	/**
+	 * Date and time of the request in UTC timezone using ISO-8601 format.
+	 */
+	public Date getTimestamp() {
+		return timestamp;
+	}
+	
+	public void setTimestamp(final Date timestamp) {
+		this.timestamp = timestamp;
+	}
+	
+	/**
+	 * Contains the results of the natual language processing.
+	 */
+	public Result getResult() {
+		return result;
+	}
+	
+	public void setResult(final Result result) {
+		this.result = result;
+	}
+	
+	/**
+	 * Contains data on how the request succeeded or failed.
+	 */
+	public Status getStatus() {
+		return status;
+	}
+	
+	public void setStatus(final Status status) {
+		this.status = status;
+	}
+	
+	/**
+	 * Session ID
+	 */
+	public String getSessionId() {
+		return sessionId;
+	}
+	
+	public void setSessionId(String sessionId) {
+		this.sessionId = sessionId;
+	}
+	
+	public boolean isError() {
+		if (status != null && status.getCode() != null && status.getCode() >= 400) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("AIResponse{id='%s', timestamp=%s, result=%s, status=%s, sessionId=%s}",
+				id,
+				timestamp,
+				result,
+				status,
+				sessionId);
+	}
+	
+	public void cleanup() {
+		if (result != null) {
+			result.trimParameters();
+		}
+	}
 }
