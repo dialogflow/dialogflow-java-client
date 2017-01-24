@@ -25,7 +25,6 @@ import java.io.UnsupportedEncodingException;
 
 import java.net.Proxy;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -201,7 +200,7 @@ public class AIConfiguration implements Cloneable {
     	result.append(serviceUrl).append(CONTEXTS_ENDPOINT);
     	if (!StringUtils.isEmpty(suffix)) {
 			try {
-				result.append("/").append(URLEncoder.encode(suffix, StandardCharsets.UTF_8.name()));
+				result.append("/").append(URLEncoder.encode(suffix, "UTF-8"));
 			} catch (UnsupportedEncodingException e) {
 				// This is unexpected due to encoding value is defined as constant string
 				throw new RuntimeException(e);
