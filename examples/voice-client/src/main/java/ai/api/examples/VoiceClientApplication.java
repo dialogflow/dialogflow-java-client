@@ -27,6 +27,8 @@ import java.io.FileInputStream;
 import ai.api.AIConfiguration;
 import ai.api.AIDataService;
 import ai.api.model.AIResponse;
+import ai.api.speech.gcp.GcpAIConfiguration;
+import ai.api.speech.gcp.GcpAIDataService;
 
 /**
  * Voice client sends audio requests from files
@@ -50,9 +52,9 @@ public class VoiceClientApplication {
 			showHelp("Please specify API key", ERROR_EXIT_CODE);
 		}
 		
-		AIConfiguration configuration = new AIConfiguration(args[0]);
+		GcpAIConfiguration configuration = new GcpAIConfiguration(args[0]);
 		
-		AIDataService dataService = new AIDataService(configuration);
+		GcpAIDataService dataService = new GcpAIDataService(configuration);
 
 		for (int i = 1; i < args.length; ++i) {
 			File file = new File(args[i]);
