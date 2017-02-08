@@ -1,0 +1,49 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>ai.api</groupId>
+    <artifactId>ai</artifactId>
+    <version>1.3.6</version>
+    <packaging>pom</packaging>
+
+    <name>Api.ai SDK</name>
+    <description>API.AI Java SDK allows using voice commands and integration with dialog scenarios defined for a particular agent in API.AI.</description>
+    <url>https://github.com/api-ai/apiai-java-sdk</url>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jdk.version>1.7</jdk.version>
+        <maven-compiler-plugin-version>3.6.0</maven-compiler-plugin-version>
+    </properties>
+    <modules>
+        <module>libai</module>
+        <module>speech</module>
+    </modules>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <id>speaktoit</id>
+            <name>Speaktoit</name>
+        </developer>
+    </developers>
+    <scm>
+        <connection>scm:git@github.com:api-ai/apiai-java-sdk.git</connection>
+        <developerConnection>scm:git@github.com:api-ai/apiai-java-sdk.git</developerConnection>
+        <url>https://github.com/api-ai/apiai-java-sdk</url>
+    </scm>
+</project>
