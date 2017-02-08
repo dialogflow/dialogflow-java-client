@@ -26,10 +26,10 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.Date;
 
-import ai.api.model.Result;
 import ai.api.model.Status;
 
 public class AIResponseV20150204 implements Serializable {
+  private static final long serialVersionUID = 1L;
 
     /**
      * Unique identifier of the result.
