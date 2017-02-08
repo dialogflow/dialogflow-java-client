@@ -31,7 +31,6 @@ import com.google.cloud.speech.v1beta1.SpeechGrpc;
 import com.google.cloud.speech.v1beta1.SyncRecognizeRequest;
 import com.google.cloud.speech.v1beta1.SyncRecognizeResponse;
 import com.google.cloud.speech.v1beta1.SpeechGrpc.SpeechBlockingStub;
-import com.google.cloud.speech.v1beta1.SpeechRecognitionResult;
 import com.google.protobuf.ByteString;
 
 import ai.api.AIDataService;
