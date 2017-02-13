@@ -1,5 +1,6 @@
 package ai.api;
 
+import java.util.TimeZone;
 
 /***********************************************************************************************************************
  *
@@ -31,4 +32,10 @@ public interface AIServiceContext {
 	 * @return Session unique string value.  Never <code>null</code>
 	 */
 	String getSessionId();
+	
+	/**
+	 * @return Client's time zone. If <code>null</code> then system default time zone
+	 * will be assumed.
+	 */
+	TimeZone getTimeZone();
 }
