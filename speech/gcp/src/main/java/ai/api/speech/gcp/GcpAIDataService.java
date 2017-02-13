@@ -53,16 +53,28 @@ public class GcpAIDataService extends AIDataService {
 	private ManagedChannel channel;
 	private SpeechBlockingStub speechClient;
 
+	/**
+     * Create new instance of AI data service
+     * @param config Service configuration
+     */
 	public GcpAIDataService(GcpAIConfiguration config) {
 		super(config);
 		this.config = config.clone();
 	}
 
+	/**
+	 * Create new instance of AI data service
+	 * @param config Service configuration
+	 * @param serviceContext Default service context
+	 */
 	public GcpAIDataService(GcpAIConfiguration config, AIServiceContext serviceContext) {
 		super(config, serviceContext);
 		this.config = config.clone();
 	}
 
+	/**
+	 * @see AIDataService#voiceRequest(InputStream, RequestExtras, AIServiceContext)
+	 */
 	@Override
 	public AIResponse voiceRequest(InputStream voiceStream, RequestExtras requestExtras,
 			AIServiceContext serviceContext) throws AIServiceException {

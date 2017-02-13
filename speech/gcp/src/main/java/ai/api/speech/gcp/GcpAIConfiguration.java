@@ -29,6 +29,9 @@ import com.google.cloud.speech.v1beta1.RecognitionConfig.AudioEncoding;
 
 import ai.api.AIConfiguration;
 
+/**
+ * Configuration for {@link GcpAIDataService}
+ */
 public class GcpAIConfiguration extends AIConfiguration {
 	
 	private static final int DEFAULT_SAMPLING_RATE = 16000; 
@@ -41,31 +44,57 @@ public class GcpAIConfiguration extends AIConfiguration {
             .setSampleRate(DEFAULT_SAMPLING_RATE)
             .build();
 
+	/**
+	 * Create new configuration and initialize client access token
+	 * @param clientAccessToken <a href="https://docs.api.ai/docs/authentication#obtaining-access-tokens">
+	 * Client access token</a>
+	 */
 	public GcpAIConfiguration(final String clientAccessToken) {
 		super(clientAccessToken);
 	}
 	
+	/**
+     * Create new configuration and initialize client access token
+     * @param clientAccessToken <a href="https://docs.api.ai/docs/authentication#obtaining-access-tokens">
+     * Client access token</a>
+     * @param language Supported language
+     */
 	public GcpAIConfiguration(final String clientAccessToken, final SupportedLanguages language) {
 		super(clientAccessToken, language);
 	}
 
+	/**
+	 * @see AIConfiguration#clone()
+	 */
 	@Override
 	public GcpAIConfiguration clone() {
 		return (GcpAIConfiguration)super.clone();
 	}
 
+	/**
+	 * Get URI for speech API service
+	 */
 	public final String getSpeechApiHost() {
 		return speechApiHost;
 	}
 
+	/**
+     * Set URI for speech API service
+     */
 	public final void setSpeechApiHost(String speechApiHost) {
 		this.speechApiHost = speechApiHost;
 	}
 
+	/**
+     * Get port number for speech API service
+     */
 	public final int getSpeechApiPort() {
 		return speechApiPort;
 	}
 
+	/**
+     * Set port number for speech API service
+     */
 	public final void setSpeechApiPort(int speechApiPort) {
 		this.speechApiPort = speechApiPort;
 	}
@@ -78,10 +107,17 @@ public class GcpAIConfiguration extends AIConfiguration {
 		this.authScope = authScope;
 	}
 
+	/**
+	 * Get recognition configuration
+	 * @return <code>null</code> if recognition configuration is undefined
+	 */
 	public final RecognitionConfig getRecognitionConfig() {
 		return recognitionConfig;
 	}
 
+	/**
+     * Set recognition configuration
+     */
 	public final void setRecognitionConfig(RecognitionConfig recognitionConfig) {
 		this.recognitionConfig = recognitionConfig;
 	}
