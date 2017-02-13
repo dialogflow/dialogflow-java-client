@@ -3,7 +3,6 @@ package ai.api;
 import static org.junit.Assert.*;
 
 import java.net.MalformedURLException;
-import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Map;
 import java.util.TimeZone;
