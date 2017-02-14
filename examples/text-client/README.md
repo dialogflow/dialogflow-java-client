@@ -15,7 +15,7 @@ change a work directory
 
 and run the assembly routine
 
-    mvn compile assembly:single
+    mvn package
 
 ## 4. Run the application
 
