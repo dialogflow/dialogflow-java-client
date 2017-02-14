@@ -1,10 +1,11 @@
 package ai.api.model;
+
 /***********************************************************************************************************************
  *
  * API.AI Java SDK - client-side libraries for API.AI
  * =================================================
  *
- * Copyright (C) 2016 by Speaktoit, Inc. (https://www.speaktoit.com) https://www.api.ai
+ * Copyright (C) 2017 by Speaktoit, Inc. (https://www.speaktoit.com) https://www.api.ai
  *
  ***********************************************************************************************************************
  *

@@ -1,13 +1,11 @@
 package ai.api;
 
-import java.util.TimeZone;
-
 /***********************************************************************************************************************
  *
  * API.AI Java SDK - client-side libraries for API.AI
  * =================================================
  *
- * Copyright (C) 2016 by Speaktoit, Inc. (https://www.speaktoit.com)
+ * Copyright (C) 2017 by Speaktoit, Inc. (https://www.speaktoit.com)
  * https://www.api.ai
  *
  * *********************************************************************************************************************
@@ -22,6 +20,8 @@ import java.util.TimeZone;
  * specific language governing permissions and limitations under the License.
  *
  ***********************************************************************************************************************/
+
+import java.util.TimeZone;
 
 /**
  * Contains environment specific information required for service request 
