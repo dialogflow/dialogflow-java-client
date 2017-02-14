@@ -1,4 +1,4 @@
-# Text Recognition
+# Text Client Sample
 
 This is a sample project that illustrates the way to create a simple api.ai
 client application.

@@ -1,4 +1,4 @@
-# Voice Recognition
+# Voice Recognition Client Sample
 
 This is a sample project that illustrates the way to add Google Cloud Speech API
 into your api.ai client project.
