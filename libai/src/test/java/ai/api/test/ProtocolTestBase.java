@@ -704,29 +704,26 @@ public abstract class ProtocolTestBase {
 
     @Test
     public void inputContextWithLifespanTest() throws AIServiceException {
+        final int lifespan = 3;
         final AIDataService aiDataService = createDataService();
 
         final AIContext weatherContext = new AIContext("weather");
         weatherContext.setParameters(Collections.singletonMap("location", "London"));
-        weatherContext.setLifespan(3);
+        weatherContext.setLifespan(lifespan);
 
         final AIRequest aiRequest = new AIRequest();
         aiRequest.setQuery("and for tomorrow");
         aiRequest.setContexts(Collections.singletonList(weatherContext));
 
-        final AIResponse aiResponse = makeRequest(aiDataService, aiRequest);
+        AIResponse aiResponse = makeRequest(aiDataService, aiRequest);
 
         assertEquals("Weather in London for tomorrow", aiResponse.getResult().getFulfillment().getSpeech());
-        assertNotNull(aiResponse.getResult().getContext("weather"));
 
-        AIResponse nextResponse = null;
-        for (int i = 0; i < 2; i++) {
-            nextResponse = makeRequest(aiDataService, new AIRequest("next request"));
+        for (int i = 0; i < lifespan - 1; i++) {
+            assertNotNull(String.format("Request #%d failed", i + 1), aiResponse.getResult().getContext("weather"));
+            aiResponse = makeRequest(aiDataService, new AIRequest("next request"));
         }
-
-        assertNotNull(nextResponse.getResult().getContext("weather"));
-        nextResponse = makeRequest(aiDataService, new AIRequest("next request"));
-        assertNull(nextResponse.getResult().getContext("weather"));
+        assertNull(aiResponse.getResult().getContext("weather"));
     }
 
     @Test
