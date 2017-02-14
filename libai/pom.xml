@@ -9,7 +9,7 @@
 	<url>https://github.com/api-ai/apiai-java-sdk</url>
 	<parent>
 		<groupId>ai.api</groupId>
-		<artifactId>ai</artifactId>
+		<artifactId>libai-base</artifactId>
 		<relativePath>..</relativePath>
 		<version>1.3.6</version>
 	</parent>
