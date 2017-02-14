@@ -18,6 +18,7 @@
 	<modules>
 		<module>text-client</module>
 		<module>voice-client</module>
+		<module>web-client</module>
 	</modules>
 	<licenses>
 		<license>

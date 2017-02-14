@@ -1,0 +1,122 @@
+<html>
+<head>
+<title>Api.ai Webhook Example</title>
+<style>
+textarea {
+	width: 100%;
+	height: 150px;
+	display: block;
+}
+
+form div {
+	display: flex;
+	flex-direction: row;
+}
+
+form div div {
+	width: 50%;
+	display: flex;
+	flex-direction: column;
+}
+</style>
+</head>
+<body>
+	<h2>Webhook Example</h2>
+	<form id="webhookForm" onsubmit="return false;">
+		<div>
+			<div>
+				Webhook Input:
+				<textarea name="input">{
+     "originalRequest": {
+         "data": {
+             "text": "shipping costs for asia", 
+             "match": [
+                 "shipping costs for asia"
+             ], 
+             "type": "message", 
+             "event": "direct_message", 
+             "team": "T0FJ03RMP", 
+             "user": "U0FLW1N95", 
+             "channel": "D4VTEALFP", 
+             "ts": "1478131884.000006"
+         }, 
+         "source": "slack_testbot"
+     }, 
+     "timestamp": "2016-11-03T00:11:24.706Z", 
+     "result": {
+         "speech": "", 
+         "fulfillment": {
+             "speech": "Shipping cost varies for the location the item needs to be shipped to. We will show you the cost, when you form the order in your cart.", 
+             "messages": [
+                 {
+                     "speech": "Shipping cost varies for the location the item needs to be shipped to. We will show you the cost, when you form the order in your cart.", 
+                     "type": 0
+                 }
+             ]
+         }, 
+         "score": 1.0, 
+         "source": "agent", 
+         "action": "shipping.cost", 
+         "resolvedQuery": "shipping costs for asia", 
+         "actionIncomplete": false, 
+         "contexts": [
+             {
+                 "name": "generic", 
+                 "parameters": {
+                     "slack_channel": "D2VTEALFP", 
+                     "shipping-zone.original": "Asia", 
+                     "shipping-zone": "Asia", 
+                     "slack_user_id": "U0FLW1N93"
+                 }, 
+                 "lifespan": 4
+             }
+         ], 
+         "parameters": {
+             "shipping-zone": "Asia"
+         }, 
+         "metadata": {
+             "intentId": "e2eb1b9c-761d-4588-8b00-d7062128cb51", 
+             "webhookUsed": "true", 
+             "intentName": "shipping.cost"
+         }
+     }, 
+     "sessionId": "fa08b2f0-a0f3-11e6-9a45-ef317d100c6e", 
+     "id": "cc8ca971-0eec-4a04-ab54-d2af01e4674e", 
+     "status": {
+         "errorType": "success", 
+         "code": 200
+     }
+ }
+            </textarea>
+			</div>
+			<div>
+				Webhook Output:
+				<textarea name="output" readonly></textarea>
+			</div>
+		</div>
+		<button name="button" id="webhookFormSubmit">Send Webhook</button>
+	</form>
+	<script>
+		function sendWebhook(e) {
+			var form = e.target.form;
+			form.elements['button'].disabled = true;
+			form.elements['output'].value = "";
+
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", "webhook", true);
+			xhr.setRequestHeader('Content-Type',
+					'application/json; charset=UTF-8');
+
+			// send the collected data as JSON
+			xhr.send(form.elements['input'].value);
+
+			xhr.onloadend = function(e) {
+				form.elements['button'].disabled = false;
+				form.elements['output'].value = e.target.responseText;
+			};
+			return false;
+		}
+		document.getElementById("webhookFormSubmit").onclick = sendWebhook;
+	</script>
+</body>
+</html>
