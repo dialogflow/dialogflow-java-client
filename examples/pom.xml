@@ -3,10 +3,10 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ai.api.libai.examples</groupId>
 	<artifactId>libai-example</artifactId>
-	<version>1.3.6</version>
+	<version>1.4.6</version>
 	<packaging>pom</packaging>
 
-	<name>Api.ai SDK Examples</name>
+	<name>Api.Ai SDK Samples</name>
 	<description></description>
 	<url>https://github.com/api-ai/apiai-java-sdk/tree/master/examples</url>
 	<properties>
