@@ -1,5 +1,7 @@
 package ai.api.model;
 
+import java.io.Serializable;
+
 /***********************************************************************************************************************
  *
  * API.AI Java SDK - client-side libraries for API.AI
@@ -23,8 +25,6 @@ package ai.api.model;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
-
 public class Metadata implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -46,7 +46,7 @@ public class Metadata implements Serializable {
      */
     @SerializedName("webhookUsed")
     private String webhookUsed;
-
+    
     /**
      * Name of the intent that produced this result
      */
@@ -79,4 +79,13 @@ public class Metadata implements Serializable {
     public void setWebhookUsed(boolean webhookUsed) {
     	this.webhookUsed = Boolean.toString(webhookUsed);
     }
+    
+    @Override
+    public String toString(){
+    	return String.format("Metadata{intentName='%s', intentId=%s webhookUsed=%s}",
+			intentName,
+			intentId,
+			webhookUsed);
+    }
+    
 }

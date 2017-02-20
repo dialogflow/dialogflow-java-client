@@ -117,4 +117,16 @@ public class Fulfillment implements Serializable {
     public void setContextOut(final List<AIOutputContext> contextOut) {
         this.contextOut = contextOut;
     }
+    
+    @Override
+    public String toString(){
+    	return String.format("Metadata{speech='%s', messages=%s displayText=%s, data=%s,"
+    			+ "source=%s, contextOut=%s}",
+			speech,
+			messages,
+			displayText,
+			data,
+			source,
+			contextOut);
+    }
 }

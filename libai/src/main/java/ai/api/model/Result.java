@@ -33,8 +33,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import ai.api.util.StringUtils;
 
 import ai.api.util.ParametersConverter;
@@ -320,6 +318,17 @@ public class Result implements Serializable {
 	
 	@Override
 	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
+		return String.format("AIResponse{action='%s', score=%s source=%s, paramteres=%s, contexts=%s,"
+				+ "metadata=%s, resolvedQuery=%s, fullfillment=%s, actionIncomplete=%s}",
+				action,
+				score,
+				source,
+				parameters,
+				contexts,
+				metadata,
+				resolvedQuery,
+				fulfillment,
+				actionIncomplete
+				);
 	}
 }
