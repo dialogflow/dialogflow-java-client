@@ -140,32 +140,8 @@ public class Fulfillment implements Serializable {
         return c;
       }
     }
-    public void setSource(final String source) {
-        this.source = source;
-    }
-
-
-    public List<AIOutputContext> getContextOut() {
-        return contextOut;
-    }
-
-    public AIOutputContext getContext(final String name) {
-        if (StringUtils.isEmpty(name)) {
-            throw new IllegalArgumentException("name argument must be not empty");
-        }
-
-        if (contextOut == null) {
-            return null;
-        }
-
-        for (final AIOutputContext c : contextOut) {
-            if (name.equalsIgnoreCase(c.getName())) {
-                return c;
-            }
-        }
-
-        return null;
-    }
+    return null;
+  } 
     
   /** Set list of context objects set after intent completion. */
   public void setContextOut(final List<AIOutputContext> contextOut) {
@@ -176,6 +152,7 @@ public class Fulfillment implements Serializable {
   public void setContextOut(final AIOutputContext... contextOut) {
     setContextOut(Arrays.asList(contextOut));
   }
+  
   @Override
    public String toString(){
     	return String.format("Metadata{speech='%s', messages=%s displayText=%s, data=%s,"
