@@ -29,6 +29,7 @@ import java.util.Date;
 import ai.api.model.Status;
 
 public class AIResponseDefault implements Serializable {
+  private static final long serialVersionUID = 1L;
 
     /**
      * Unique identifier of the result.

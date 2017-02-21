@@ -1,0 +1,49 @@
+<html>
+<head>
+<title>Api.ai Text Request Example</title>
+<style>
+	textarea {
+	    width: 100%;
+	    height: 150px;
+	    display: block;
+	}
+    form span { width: 400px;}
+</style>
+</head>
+<body>
+	<h2>Api.ai Text Request Example</h2>
+	<form id="webhookForm" onsubmit="return false;">
+	    <div>
+	       <span>Query:</span>
+	       <input type="text" name="query" value="hello">
+	       <button name="button" onclick="sendRequest(this.form)">Send Request</button>
+       </div>
+	    <div><textarea name="response" readonly="readonly"></textarea></div>
+	</form>
+	<script>
+		function sendRequest(form) {
+			var query = form.elements['query'].value;
+			if (query == null || query == "") {
+				return;
+			}
+			
+			form.elements['button'].disabled = true;
+            form.elements['response'].value += "\n> " + query;
+            form.elements['response'].scrollTop = form.elements['response'].scrollHeight 
+
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", "ai", true);
+			xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+			var formData = "query=" + encodeURIComponent(query);
+			xhr.send(formData);
+
+			xhr.onloadend = function(e) {
+				form.elements['button'].disabled = false;
+				form.elements['response'].value += "\n" + e.target.responseText;
+				form.elements['response'].scrollTop = form.elements['response'].scrollHeight
+			};
+			return false;
+		}
+	</script>
+</body>
+</html>

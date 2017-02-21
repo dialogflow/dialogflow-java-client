@@ -30,8 +30,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -41,7 +39,6 @@ public class HttpClient {
 	private static final Logger Log = LogManager.getLogger(HttpClient.class);
     private static final int CHUNK_LENGTH = 2048;
     private static final int BUFFER_LENGTH = 4096;
-    private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
     /**
      *  Cannot be <code>null</code>
@@ -149,7 +146,7 @@ public class HttpClient {
      */
     public String getResponse() throws IOException {
         final InputStream inputStream = new BufferedInputStream(connection.getInputStream());
-        final String response = IOUtils.readAll(inputStream, DEFAULT_CHARSET);
+        final String response = IOUtils.readAll(inputStream);
         inputStream.close();
         return response;
     }
@@ -158,7 +155,7 @@ public class HttpClient {
         try {
             final InputStream inputStream = new BufferedInputStream(connection.getErrorStream());
             final String response;
-            response = IOUtils.readAll(inputStream, DEFAULT_CHARSET);
+            response = IOUtils.readAll(inputStream);
             inputStream.close();
             return response;
         } catch (final IOException e) {

@@ -1,12 +1,11 @@
 package ai.api;
 
-
 /***********************************************************************************************************************
  *
  * API.AI Java SDK - client-side libraries for API.AI
  * =================================================
  *
- * Copyright (C) 2016 by Speaktoit, Inc. (https://www.speaktoit.com)
+ * Copyright (C) 2017 by Speaktoit, Inc. (https://www.speaktoit.com)
  * https://www.api.ai
  *
  * *********************************************************************************************************************
@@ -22,6 +21,8 @@ package ai.api;
  *
  ***********************************************************************************************************************/
 
+import java.util.TimeZone;
+
 /**
  * Contains environment specific information required for service request 
  */
@@ -31,4 +32,10 @@ public interface AIServiceContext {
 	 * @return Session unique string value.  Never <code>null</code>
 	 */
 	String getSessionId();
+	
+	/**
+	 * @return Client's time zone. If <code>null</code> then system default time zone
+	 * will be assumed.
+	 */
+	TimeZone getTimeZone();
 }

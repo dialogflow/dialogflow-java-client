@@ -26,6 +26,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 public class MetadataDefault implements Serializable {
+  private static final long serialVersionUID = 1L;
 
     /**
      * Name of the intent that produced this result

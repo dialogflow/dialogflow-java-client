@@ -28,6 +28,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 
 public class ResultDefault implements Serializable {
+  private static final long serialVersionUID = 1L;
 
     @SerializedName("speech")
     private String speech;
