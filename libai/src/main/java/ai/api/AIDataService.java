@@ -34,12 +34,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.net.*;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
+import java.util.*;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -555,7 +550,7 @@ public class AIDataService {
   }
 
   /**
-   * Add a bunch of new entity to an agent entity list
+   * Add a bunch of new entity to an agent user entity list
    * 
    * @param userEntities collection of a new entity data
    * @param serviceContext custom service context that should be used instead of the default context
@@ -564,6 +559,49 @@ public class AIDataService {
    */
   public AIResponse uploadUserEntities(final Collection<Entity> userEntities,
       AIServiceContext serviceContext) throws AIServiceException {
+    return getEntitiesAiResponse(userEntities, config.getUserEntitiesEndpoint(getSessionId(serviceContext)));
+  }
+
+
+  /**
+   * Add a bunch of new entity to an agent entity list
+   *
+   * @param entity collection of a new entity data
+   * @return response object from service. Never <code>null</code>
+   * @throws AIServiceException
+   */
+  public AIResponse uploadEntity(final Entity entity) throws AIServiceException {
+    final ArrayList<Entity> entities = new ArrayList<>();
+    entities.add(entity);
+    return getEntitiesAiResponse(entities, config.getEntitiesEndpoint(getSessionId(UNDEFINED_SERVICE_CONTEXT)));
+  }
+
+  /**
+   * Add a bunch of new entity to an agent entity list
+   *
+   * @param entities collection of a new entity data
+   * @return response object from service. Never <code>null</code>
+   * @throws AIServiceException
+   */
+  public AIResponse uploadEntities(final Collection<Entity> entities) throws AIServiceException {
+    return getEntitiesAiResponse(entities, config.getEntitiesEndpoint(getSessionId(UNDEFINED_SERVICE_CONTEXT)));
+  }
+
+
+  /**
+   * Add a bunch of new entity to an agent entity list
+   *
+   * @param entities collection of a new entity data
+   * @param serviceContext custom service context that should be used instead of the default context
+   * @return response object from service. Never <code>null</code>
+   * @throws AIServiceException
+   */
+  public AIResponse uploadEntities(final Collection<Entity> entities,
+                                       AIServiceContext serviceContext) throws AIServiceException {
+    return getEntitiesAiResponse(entities, config.getEntitiesEndpoint(getSessionId(serviceContext)));
+  }
+
+  private AIResponse getEntitiesAiResponse(Collection<Entity> userEntities, String endpoint) throws AIServiceException {
     if (userEntities == null || userEntities.size() == 0) {
       throw new AIServiceException("Empty entities list");
     }
@@ -571,7 +609,7 @@ public class AIDataService {
     final String requestData = GSON.toJson(userEntities);
     try {
       final String response =
-          doTextRequest(config.getUserEntitiesEndpoint(getSessionId(serviceContext)), requestData);
+          doTextRequest(endpoint, requestData);
       if (StringUtils.isEmpty(response)) {
         throw new AIServiceException(
             "Empty response from ai service. Please check configuration and Internet connection.");

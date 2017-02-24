@@ -212,6 +212,10 @@ public class AIConfiguration implements Cloneable {
     return formatEndpoint(sessionId, protocolVersion, serviceUrl, USER_ENTITIES_ENDPOINT);
   }
 
+  String getEntitiesEndpoint(final String sessionId) {
+    return formatEndpoint(sessionId, protocolVersion, serviceUrl, ENTITIES_ENDPOINT);
+  }
+
   private String formatEndpoint(String sessionId, String protocolVersion, String serviceUrl, String userEntitiesEndpoint) {
     if (StringUtils.isEmpty(protocolVersion)) {
       return String.format("%s%s?sessionId=%s", serviceUrl, userEntitiesEndpoint, sessionId);

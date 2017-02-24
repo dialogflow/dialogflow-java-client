@@ -539,6 +539,25 @@ public abstract class ProtocolTestBase {
 
     }
 
+    @Test
+    public void entitiesTest() throws AIServiceException {
+        final AIConfiguration config = new AIConfiguration(getAccessToken(),
+                AIConfiguration.SupportedLanguages.English);
+
+        updateConfig(config);
+
+        final AIDataService aiDataService = new AIDataService(config);
+        final AIDataService secondDataService = new AIDataService(config, aiDataService.getContext());
+
+        final Entity dwarfsEntity = createDwarfsEntity();
+
+        final AIResponse uploadResult = aiDataService.uploadEntity(dwarfsEntity);
+        assertNotNull(uploadResult);
+        assertFalse(uploadResult.isError());
+    }
+
+
+
     @Test(expected = AIServiceException.class)
     public void userEntitiesEmptyCollectionTest() throws AIServiceException {
         final AIDataService aiDataService = createDataService();
