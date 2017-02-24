@@ -60,6 +60,7 @@ public class AIConfiguration implements Cloneable {
   protected static final String CURRENT_PROTOCOL_VERSION = "20150910";
   protected static final String QUESTION_ENDPOINT = "query";
   protected static final String USER_ENTITIES_ENDPOINT = "userEntities";
+  protected static final String ENTITIES_ENDPOINT = "entities";
   protected static final String CONTEXTS_ENDPOINT = "contexts";
 
   private final String apiKey;
@@ -204,20 +205,19 @@ public class AIConfiguration implements Cloneable {
   }
 
   String getQuestionUrl(final String sessionId) {
-    if (StringUtils.isEmpty(protocolVersion)) {
-      return String.format("%s%s?sessionId=%s", serviceUrl, QUESTION_ENDPOINT, sessionId);
-    } else {
-      return String.format("%s%s?v=%s&sessionId=%s", serviceUrl, QUESTION_ENDPOINT, protocolVersion,
-          sessionId);
-    }
+    return formatEndpoint(sessionId, protocolVersion, serviceUrl, QUESTION_ENDPOINT);
   }
 
   String getUserEntitiesEndpoint(final String sessionId) {
+    return formatEndpoint(sessionId, protocolVersion, serviceUrl, USER_ENTITIES_ENDPOINT);
+  }
+
+  private String formatEndpoint(String sessionId, String protocolVersion, String serviceUrl, String userEntitiesEndpoint) {
     if (StringUtils.isEmpty(protocolVersion)) {
-      return String.format("%s%s?sessionId=%s", serviceUrl, USER_ENTITIES_ENDPOINT, sessionId);
+      return String.format("%s%s?sessionId=%s", serviceUrl, userEntitiesEndpoint, sessionId);
     } else {
-      return String.format("%s%s?v=%s&sessionId=%s", serviceUrl, USER_ENTITIES_ENDPOINT,
-          protocolVersion, sessionId);
+      return String.format("%s%s?v=%s&sessionId=%s", serviceUrl, userEntitiesEndpoint,
+              protocolVersion, sessionId);
     }
   }
 
