@@ -44,6 +44,11 @@ public class ProtocolProdTest extends ProtocolTestBase {
         return "";
     }
 
+    protected String getDevAccessToken(){
+
+        return "fdee465864a146b08260f4134d010a04";
+    }
+
     protected String getPtBrAccessToken(){
         return "42db6ad6a51c47088318a8104833b66c";
     }

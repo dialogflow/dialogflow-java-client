@@ -57,6 +57,8 @@ public abstract class ProtocolTestBase {
 
     protected abstract String getJaAccessToken();
 
+    protected abstract String getDevAccessToken();
+
     protected ProtocolTestBase() {
     }
 
@@ -541,13 +543,12 @@ public abstract class ProtocolTestBase {
 
     @Test
     public void entitiesTest() throws AIServiceException {
-        final AIConfiguration config = new AIConfiguration(getAccessToken(),
+        final AIConfiguration config = new AIConfiguration(getDevAccessToken(),
                 AIConfiguration.SupportedLanguages.English);
 
         updateConfig(config);
 
         final AIDataService aiDataService = new AIDataService(config);
-        final AIDataService secondDataService = new AIDataService(config, aiDataService.getContext());
 
         final Entity dwarfsEntity = createDwarfsEntity();
 
