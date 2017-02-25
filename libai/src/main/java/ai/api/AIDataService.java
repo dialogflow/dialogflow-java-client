@@ -176,7 +176,7 @@ public class AIDataService {
 
       final String queryData = GSON.toJson(request);
       final String response = doTextRequest(config.getQuestionUrl(getSessionId(serviceContext)),
-          queryData, additionalHeaders);
+          queryData, additionalHeaders, "POST");
 
       if (StringUtils.isEmpty(response)) {
         throw new AIServiceException(
@@ -559,7 +559,7 @@ public class AIDataService {
    */
   public AIResponse uploadUserEntities(final Collection<Entity> userEntities,
       AIServiceContext serviceContext) throws AIServiceException {
-    return getEntitiesAiResponse(userEntities, config.getUserEntitiesEndpoint(getSessionId(serviceContext)));
+    return getEntitiesAiResponse(userEntities, config.getUserEntitiesEndpoint(getSessionId(serviceContext)), "POST");
   }
 
 
@@ -573,8 +573,23 @@ public class AIDataService {
   public AIResponse uploadEntity(final Entity entity) throws AIServiceException {
     final ArrayList<Entity> entities = new ArrayList<>();
     entities.add(entity);
-    return getEntitiesAiResponse(entities, config.getEntitiesEndpoint(getSessionId(UNDEFINED_SERVICE_CONTEXT)));
+    return getEntitiesAiResponse(entities, config.getEntitiesEndpoint(getSessionId(UNDEFINED_SERVICE_CONTEXT)), "POST");
   }
+
+
+  /**
+   * Send new entries to existing entity
+   *
+   * @param entity collection of a new entity data
+   * @return response object from service. Never <code>null</code>
+   * @throws AIServiceException
+   */
+  public AIResponse addEntityData(final Entity entity) throws AIServiceException {
+    final ArrayList<Entity> entities = new ArrayList<>();
+    entities.add(entity);
+    return getEntitiesAiResponse(entities, config.getEntitiesEndpoint(getSessionId(UNDEFINED_SERVICE_CONTEXT)), "PUT");
+  }
+
 
   /**
    * Add a bunch of new entity to an agent entity list
@@ -584,7 +599,7 @@ public class AIDataService {
    * @throws AIServiceException
    */
   public AIResponse uploadEntities(final Collection<Entity> entities) throws AIServiceException {
-    return getEntitiesAiResponse(entities, config.getEntitiesEndpoint(getSessionId(UNDEFINED_SERVICE_CONTEXT)));
+    return getEntitiesAiResponse(entities, config.getEntitiesEndpoint(getSessionId(UNDEFINED_SERVICE_CONTEXT)), "POST");
   }
 
 
@@ -602,6 +617,11 @@ public class AIDataService {
   }
 
   private AIResponse getEntitiesAiResponse(Collection<Entity> userEntities, String endpoint) throws AIServiceException {
+    return getEntitiesAiResponse(userEntities,endpoint,"POST");
+  }
+
+
+    private AIResponse getEntitiesAiResponse(Collection<Entity> userEntities, String endpoint, String requestMethod) throws AIServiceException {
     if (userEntities == null || userEntities.size() == 0) {
       throw new AIServiceException("Empty entities list");
     }
@@ -609,7 +629,7 @@ public class AIDataService {
     final String requestData = GSON.toJson(userEntities);
     try {
       final String response =
-          doTextRequest(endpoint, requestData);
+          doTextRequest(endpoint, requestData, requestMethod);
       if (StringUtils.isEmpty(response)) {
         throw new AIServiceException(
             "Empty response from ai service. Please check configuration and Internet connection.");
@@ -671,19 +691,34 @@ public class AIDataService {
    */
   protected String doTextRequest(final String endpoint, final String requestJson)
       throws MalformedURLException, AIServiceException {
-    return doTextRequest(endpoint, requestJson, null);
+    return doTextRequest(endpoint, requestJson, "POST");
   }
 
   /**
    * @param endpoint Cannot be <code>null</code>
    * @param requestJson Cannot be <code>null</code>
+   * @param requestMethod HTTP method to perform the request
+   * @return Response string
+   * @throws MalformedURLException
+   * @throws AIServiceException
+   */
+  protected String doTextRequest(final String endpoint, final String requestJson, String requestMethod)
+          throws MalformedURLException, AIServiceException {
+    return doTextRequest(endpoint, requestJson, null, requestMethod);
+  }
+
+
+  /**
+   * @param endpoint Cannot be <code>null</code>
+   * @param requestJson Cannot be <code>null</code>
    * @param additionalHeaders
+   * @param requestMethod
    * @return Response string
    * @throws MalformedURLException
    * @throws AIServiceException
    */
   protected String doTextRequest(final String endpoint, final String requestJson,
-      final Map<String, String> additionalHeaders)
+                                 final Map<String, String> additionalHeaders, String requestMethod)
       throws MalformedURLException, AIServiceException {
     // TODO call doRequest method
     assert endpoint != null;
@@ -704,7 +739,7 @@ public class AIDataService {
         connection = (HttpURLConnection) url.openConnection();
       }
 
-      connection.setRequestMethod("POST");
+      connection.setRequestMethod(requestMethod);
       connection.setDoOutput(true);
       connection.addRequestProperty("Authorization", "Bearer " + config.getApiKey());
       connection.addRequestProperty("Content-Type", "application/json; charset=utf-8");
