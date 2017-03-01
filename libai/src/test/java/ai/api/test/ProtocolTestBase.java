@@ -552,7 +552,7 @@ public abstract class ProtocolTestBase {
 
         final Entity dwarfsEntity = createDwarfsEntity();
 
-        final AIResponse uploadResult = aiDataService.addEntityData(dwarfsEntity);
+        final AIResponse uploadResult = aiDataService.updateEntityData(dwarfsEntity);
         assertNotNull(uploadResult);
         assertFalse(uploadResult.isError());
     }

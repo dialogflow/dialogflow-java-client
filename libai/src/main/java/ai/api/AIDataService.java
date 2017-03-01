@@ -578,13 +578,13 @@ public class AIDataService {
 
 
   /**
-   * Send new entries to existing entity
+   * Udate entries to existing entity
    *
-   * @param entity collection of a new entity data
+   * @param entity  new entity data
    * @return response object from service. Never <code>null</code>
    * @throws AIServiceException
    */
-  public AIResponse addEntityData(final Entity entity) throws AIServiceException {
+  public AIResponse updateEntityData(final Entity entity) throws AIServiceException {
     final ArrayList<Entity> entities = new ArrayList<>();
     entities.add(entity);
     return getEntitiesAiResponse(entities, config.getEntitiesEndpoint(getSessionId(UNDEFINED_SERVICE_CONTEXT)), "PUT");
