@@ -1,6 +1,7 @@
 package ai.api.model;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import org.junit.Test;
@@ -9,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map.Entry;
 
 import ai.api.GsonFactory;
 
@@ -22,6 +24,7 @@ public class AIResponseTest {
     public static final String TEST_JSON = "{\n" +
             "  \"id\": \"d872e7d9-d2ee-4ebd-aaff-655bfc8fbf33\",\n" +
             "  \"timestamp\": \"2015-03-18T09:54:36.216Z\",\n" +
+            "  \"lang\":\"en\",\n" + 
             "  \"result\": {\n" +
             "    \"resolvedQuery\": \"remind feed cat tomorrow 7 am\",\n" +
             "    \"action\": \"task_create\",\n" +
@@ -112,6 +115,12 @@ public class AIResponseTest {
     }
     
     @Test
+    public void getLangTest() {
+        final AIResponse aiResponse = gson.fromJson(TEST_JSON, AIResponse.class);
+        assertEquals("en", aiResponse.getLang());
+    }
+    
+    @Test
     public void getResultScoreTest() {
     	final AIResponse aiResponse = gson.fromJson(TEST_JSON, AIResponse.class);
     	assertEquals(0.875, aiResponse.getResult().getScore(), 1e-6);
@@ -124,5 +133,13 @@ public class AIResponseTest {
     			+ "timestamp=Wed Mar 18 09:54:36 "+(new SimpleDateFormat("zzz").format(new Date()))+" 2015, result=Result {action='task_create', resolvedQuery='remind feed cat tomorrow 7 am'}, "
     			+ "status=Status{code=200, errorType='success', errorDetails='null'}, sessionId=0123456789}",
     			aiResponse.toString());
+    }
+    
+    @Test
+    public void ResponseToStringTest2() {
+        final AIResponse response = gson.fromJson(TEST_JSON, AIResponse.class);
+        for (Entry<String,JsonElement> parameter : response.getResult().getParameters().entrySet()) {
+          System.out.printf("%s : %s%n", parameter.getKey(), parameter.getValue());
+        }
     }
 }
