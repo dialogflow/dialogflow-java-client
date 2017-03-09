@@ -19,6 +19,8 @@ public class AIConfigurationTest {
 		assertEquals(SupportedLanguages.DEFAULT, SupportedLanguages.fromLanguageTag(null));
 		assertEquals(SupportedLanguages.DEFAULT, SupportedLanguages.fromLanguageTag(""));
 		assertEquals(SupportedLanguages.DEFAULT, SupportedLanguages.fromLanguageTag("uu-UU"));
+		assertEquals(SupportedLanguages.Dutch, SupportedLanguages.fromLanguageTag("nl"));
+		assertEquals(SupportedLanguages.Ukrainian, SupportedLanguages.fromLanguageTag("uk"));
 	}
 	
 	@Test(expected=IllegalArgumentException.class)

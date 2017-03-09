@@ -250,10 +250,23 @@ public class AIConfiguration implements Cloneable {
    * Currently supported languages
    */
   public static enum SupportedLanguages {
-    English("en"), EnglishUS("en-US", "en"), EnglishGB("en-GB", "en"), Russian("ru"), German(
-        "de"), Portuguese("pt"), PortugueseBrazil("pt-BR"), Spanish("es"), French("fr"), Italian(
-            "it"), Japanese("ja"), Korean(
-                "ko"), ChineseChina("zh-CN"), ChineseHongKong("zh-HK"), ChineseTaiwan("zh-TW");
+    ChineseChina("zh-CN"),
+    ChineseHongKong("zh-HK"),
+    ChineseTaiwan("zh-TW"),
+    English("en"),
+    EnglishUS("en-US", "en"),
+    EnglishGB("en-GB", "en"),
+    Dutch("nl"),
+    French("fr"),
+    German("de"),
+    Italian("it"),
+    Japanese("ja"),
+    Korean("ko"),
+    Portuguese("pt"),
+    PortugueseBrazil("pt-BR"),
+    Russian("ru"),
+    Spanish("es"),
+    Ukrainian("uk");
 
     /**
      * Default language value
