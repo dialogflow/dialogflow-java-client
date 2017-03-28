@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <EditTextPreference
+        android:key="pref_ipAddress"
+        android:title="IP address"
+        android:defaultValue="" />
+
+
+    <EditTextPreference
+        android:key="pref_apiKey"
+        android:title="Client access key"
+        android:defaultValue="a07bc2127c61497fad437dd8c197f951" />
+
+</PreferenceScreen>

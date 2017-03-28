@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">LejosSample</string>
+
+    <string name="recognized_command">Recognized command</string>
+    <string name="action_settings">Settings</string>
+    <string name="connectButtonText">connect</string>
+    <string name="addressHint">Robot IP like 192.168.0.9</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+</resources>
