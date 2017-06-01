@@ -41,7 +41,7 @@ import ai.api.model.Fulfillment;
  */
 public abstract class AIWebhookServlet extends HttpServlet {
 
-  private static final String RESPONSE_CONTENT_TYPE = "Content-Type: application/json";
+  private static final String RESPONSE_CONTENT_TYPE = "application/json";
 
   private static final String RESPONSE_CHARACTER_ENCODING = "utf-8";
 
