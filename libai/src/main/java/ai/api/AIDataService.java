@@ -317,6 +317,7 @@ public class AIDataService {
    *
    * @return true if operation succeed, false otherwise
    */
+  @Deprecated
   public boolean resetContexts() {
     final AIRequest cleanRequest = new AIRequest();
     cleanRequest.setQuery("empty_query_for_resetting_contexts"); // TODO remove it after protocol

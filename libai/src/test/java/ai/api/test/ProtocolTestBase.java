@@ -394,8 +394,7 @@ public abstract class ProtocolTestBase {
             final AIResponse aiResponse = aiDataService.request(aiRequest);
             assertContainsContext(aiResponse, "name_question");
 
-            final boolean resetSucceed = aiDataService.resetContexts();
-            assertTrue(resetSucceed);
+            aiDataService.resetActiveContexts();
         }
 
         {
@@ -897,7 +896,7 @@ public abstract class ProtocolTestBase {
      * Cleanup contexts to prevent Tests correlation
      */
     protected void cleanContexts(final AIDataService aiDataService) throws AIServiceException {
-        aiDataService.resetContexts();
+        aiDataService.resetActiveContexts();
     }
 
     protected AIResponse makeRequest(final AIDataService aiDataService, final AIRequest aiRequest) throws AIServiceException {

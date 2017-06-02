@@ -1,15 +1,22 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-    <artifactId>text-client</artifactId>
-	<name>Api.Ai Console Text Client</name>
+	<artifactId>voice-client</artifactId>
+	<name>Api.Ai Console Voice Client</name>
 	<description>Tutorial Api.ai client </description>
 	<parent>
 		<groupId>ai.api.libai.examples</groupId>
 		<artifactId>libai-example</artifactId>
-		<version>1.4.6</version>
+		<version>1.4.8</version>
 	</parent>
-	<url>https://github.com/api-ai/apiai-java-sdk/tree/master/examples/text-client</url>
+	<url>https://github.com/api-ai/apiai-java-sdk/tree/master/examples/voice-client</url>
+	<dependencies>
+		<dependency>
+			<groupId>ai.api.libai.speech</groupId>
+			<artifactId>libai-speech-gcp</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -17,10 +24,10 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-assembly-plugin</artifactId>
 					<configuration>
-						<finalName>text-client</finalName>
+						<finalName>voice-client</finalName>
 						<archive>
 							<manifest>
-								<mainClass>ai.api.examples.TextClientApplication</mainClass>
+								<mainClass>ai.api.examples.VoiceClientApplication</mainClass>
 							</manifest>
 						</archive>
 					</configuration>

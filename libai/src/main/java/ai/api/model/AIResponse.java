@@ -38,6 +38,9 @@ public class AIResponse implements Serializable {
 
     @SerializedName("timestamp")
     private Date timestamp;
+    
+    @SerializedName("lang")
+    private String lang;
 
     /**
      * Result object
@@ -71,6 +74,19 @@ public class AIResponse implements Serializable {
 
     public void setTimestamp(final Date timestamp) {
         this.timestamp = timestamp;
+    }
+    
+    /**
+     * Agent's language.
+     * @return Language tag. See <a href="https://docs.api.ai/docs/languages">languages</a> 
+     * for details
+     */
+    public String getLang() {
+      return lang;
+    }
+    
+    public void setLang(String lang) {
+      this.lang = lang;
     }
 
     /**
