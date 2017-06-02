@@ -4,7 +4,9 @@
 	<parent>
 		<groupId>ai.api</groupId>
 		<artifactId>libai-base</artifactId>
+
 		<version>1.4.8</version>
+
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 	<groupId>ai.api.libai.web</groupId>

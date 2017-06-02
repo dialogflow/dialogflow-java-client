@@ -57,6 +57,8 @@ public abstract class ProtocolTestBase {
 
     protected abstract String getJaAccessToken();
 
+    protected abstract String getDevAccessToken();
+
     protected ProtocolTestBase() {
     }
 
@@ -537,6 +539,24 @@ public abstract class ProtocolTestBase {
         }
 
     }
+
+    @Test
+    public void entitiesTest() throws AIServiceException {
+        final AIConfiguration config = new AIConfiguration(getDevAccessToken(),
+                AIConfiguration.SupportedLanguages.English);
+
+        updateConfig(config);
+
+        final AIDataService aiDataService = new AIDataService(config);
+
+        final Entity dwarfsEntity = createDwarfsEntity();
+
+        final AIResponse uploadResult = aiDataService.updateEntityData(dwarfsEntity);
+        assertNotNull(uploadResult);
+        assertFalse(uploadResult.isError());
+    }
+
+
 
     @Test(expected = AIServiceException.class)
     public void userEntitiesEmptyCollectionTest() throws AIServiceException {

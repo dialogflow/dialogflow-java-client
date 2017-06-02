@@ -26,7 +26,7 @@ public class AIDataServiceTest {
 
       @Override
       protected String doTextRequest(String endpoint, String requestJson,
-          Map<String, String> additionalHeaders) throws MalformedURLException, AIServiceException {
+                                     Map<String, String> additionalHeaders, String requestMethod) throws MalformedURLException, AIServiceException {
         endpointValue.set(endpoint);
         requestJsonValue.set(requestJson);
         return "{}";
