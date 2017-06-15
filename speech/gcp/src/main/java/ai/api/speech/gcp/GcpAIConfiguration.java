@@ -24,8 +24,8 @@ package ai.api.speech.gcp;
 import java.util.Arrays;
 import java.util.List;
 
-import com.google.cloud.speech.v1beta1.RecognitionConfig;
-import com.google.cloud.speech.v1beta1.RecognitionConfig.AudioEncoding;
+import com.google.cloud.speech.v1.RecognitionConfig;
+import com.google.cloud.speech.v1.RecognitionConfig.AudioEncoding;
 
 import ai.api.AIConfiguration;
 
@@ -41,7 +41,8 @@ public class GcpAIConfiguration extends AIConfiguration {
 	private List<String> authScope = Arrays.asList("https://www.googleapis.com/auth/cloud-platform");
 	private RecognitionConfig recognitionConfig = RecognitionConfig.newBuilder()
             .setEncoding(AudioEncoding.LINEAR16)
-            .setSampleRate(DEFAULT_SAMPLING_RATE)
+            .setSampleRateHertz(DEFAULT_SAMPLING_RATE)
+            .setLanguageCode(getLanguage())
             .build();
 
 	/**
