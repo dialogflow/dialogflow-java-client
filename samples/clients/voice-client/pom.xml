@@ -5,9 +5,9 @@
 	<name>Api.Ai Console Voice Client</name>
 	<description>Tutorial Api.ai client </description>
 	<parent>
-		<groupId>ai.api.libai.examples</groupId>
-		<artifactId>libai-example</artifactId>
-		<version>1.4.8</version>
+		<groupId>ai.api.libai.samples</groupId>
+		<artifactId>libai-samples</artifactId>
+		<version>1.4.9</version>
 	</parent>
 	<url>https://github.com/api-ai/apiai-java-sdk/tree/master/examples/voice-client</url>
 	<dependencies>

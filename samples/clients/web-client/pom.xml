@@ -5,9 +5,9 @@
 	<packaging>war</packaging>
 	<name>Api.Ai Web Client Sample</name>
 	<parent>
-		<groupId>ai.api.libai.examples</groupId>
-		<artifactId>libai-example</artifactId>
-		<version>1.4.8</version>
+		<groupId>ai.api.libai.samples</groupId>
+		<artifactId>libai-samples</artifactId>
+		<version>1.4.9</version>
 	</parent>
 	<dependencies>
 		<dependency>
