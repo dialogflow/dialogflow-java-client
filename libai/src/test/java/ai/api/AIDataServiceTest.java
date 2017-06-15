@@ -33,9 +33,10 @@ public class AIDataServiceTest {
       }
 
     };
+    final String expectedTimeZone = getNonDefaultTimeZoneID();
     AIServiceContext customContext = new AIServiceContextBuilder()
         .setSessionId("customSessionId")
-        .setSessionId(TimeZone.getTimeZone("Europe/London"))
+        .setTimeZone(TimeZone.getTimeZone(expectedTimeZone))
         .build();
 
     String defaultTimeZoneID = Calendar.getInstance().getTimeZone().getID();
@@ -47,14 +48,14 @@ public class AIDataServiceTest {
     assertTrue(endpointValue.get().indexOf("sessionId=customSessionId") == -1);
     assertEquals(defaultTimeZoneID, request.getTimezone());
     assertTrue(requestJsonValue.get().indexOf(defaultTimeZoneID) > 0);
-    assertTrue(requestJsonValue.get().indexOf("Europe/London") == -1);
+    assertTrue(requestJsonValue.get().indexOf(expectedTimeZone) == -1);
     
     // Timezone is defined in custom context
     request = new AIRequest();
     dataService.request(request, customContext);
     assertTrue(endpointValue.get().indexOf("sessionId=customSessionId") > 0);
-    assertEquals("Europe/London", request.getTimezone());
-    assertTrue(requestJsonValue.get().indexOf("Europe/London") > 0);
+    assertEquals(expectedTimeZone, request.getTimezone());
+    assertTrue(requestJsonValue.get().indexOf(expectedTimeZone) > 0);
     assertTrue(requestJsonValue.get().indexOf(defaultTimeZoneID) == -1);
     
     // Timezone is defined in request and custom context
@@ -63,8 +64,18 @@ public class AIDataServiceTest {
     dataService.request(request, customContext);
     assertTrue(endpointValue.get().indexOf("sessionId=customSessionId") > 0);
     assertEquals("GMT", request.getTimezone());
-    assertTrue(requestJsonValue.get().indexOf("Europe/London") == -1);
+    assertTrue(requestJsonValue.get().indexOf(expectedTimeZone) == -1);
     assertTrue(requestJsonValue.get().indexOf(defaultTimeZoneID) == -1);
     assertTrue(requestJsonValue.get().indexOf("GMT") > 0);
+  }
+
+  private static String getNonDefaultTimeZoneID() {
+    final String defaultID = TimeZone.getDefault().getID();
+    for (String result : TimeZone.getAvailableIDs()) {
+      if (! result.equals(defaultID)) {
+        return result;
+      }
+    }
+    throw new RuntimeException("Only default time zone available");
   }
 }

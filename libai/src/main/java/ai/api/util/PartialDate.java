@@ -49,7 +49,7 @@ public class PartialDate {
     }
 
     public PartialDate(final Date date) {
-        c = new GregorianCalendar();
+        this();
         c.setTime(date);
     }
 

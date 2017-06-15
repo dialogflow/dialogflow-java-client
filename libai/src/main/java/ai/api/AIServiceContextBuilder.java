@@ -80,6 +80,15 @@ public class AIServiceContextBuilder {
    * 
    * @param timeZone Time zone value. May be <code>null</code>
    */
+  public AIServiceContextBuilder setTimeZone(final TimeZone timeZone) {
+    this.timeZone = timeZone;
+    return this;
+  }
+
+  /**
+   * Use {@link AIServiceContextBuilder}.setTimeZone method insted
+   */
+  @Deprecated()
   public AIServiceContextBuilder setSessionId(final TimeZone timeZone) {
     this.timeZone = timeZone;
     return this;
