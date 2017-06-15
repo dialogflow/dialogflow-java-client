@@ -93,7 +93,7 @@ public abstract class ProtocolTestBase {
         return new AIDataService(config);
     }
 
-    @Test
+    @Test(expected=AIServiceException.class)
     public void voiceRequestTest() throws AIServiceException {
         final AIDataService aiDataService = createDataService();
 
@@ -176,30 +176,6 @@ public abstract class ProtocolTestBase {
             }
         }
         assertFalse(contextExist);
-    }
-
-    @Test
-    public void outputContextVoiceTest() throws AIServiceException {
-        final AIConfiguration config = new AIConfiguration(getAccessToken(),
-                AIConfiguration.SupportedLanguages.English);
-
-        updateConfig(config);
-
-        final AIDataService aiDataService = new AIDataService(config);
-
-        final InputStream inputStream = getClass().getClassLoader().getResourceAsStream("what_is_your_name.raw");
-
-        final AIResponse aiResponse = aiDataService.voiceRequest(inputStream);
-        assertNotNull(aiResponse);
-        assertFalse(aiResponse.getStatus().getErrorDetails(), aiResponse.isError());
-        assertFalse(StringUtils.isEmpty(aiResponse.getId()));
-        assertNotNull(aiResponse.getResult());
-
-        final String resolvedQuery = aiResponse.getResult().getResolvedQuery();
-        assertFalse(StringUtils.isEmpty(resolvedQuery));
-        assertTrue(resolvedQuery.contains("what is your"));
-
-        assertContainsContext(aiResponse, "name_question");
     }
 
     @Test
@@ -349,26 +325,6 @@ public abstract class ProtocolTestBase {
 
         try {
             aiDataService.request(aiRequest);
-            assertTrue("Method should produce exception", false);
-        } catch (final AIServiceException e) {
-            assertNotNull(e.getResponse());
-            assertEquals("unauthorized", e.getResponse().getStatus().getErrorType());
-            assertEquals("Authorization failed. Please check your access keys.", e.getMessage());
-        }
-    }
-
-//    @Test FIXME
-    public void errorVoiceRequestTest() {
-        final AIConfiguration config = new AIConfiguration("WRONG_ACCESS_TOKEN",
-                AIConfiguration.SupportedLanguages.English);
-
-        updateConfig(config);
-
-        final AIDataService aiDataService = new AIDataService(config);
-        final InputStream voiceStream = getClass().getClassLoader().getResourceAsStream("what_is_your_name.raw");
-
-        try {
-            aiDataService.voiceRequest(voiceStream);
             assertTrue("Method should produce exception", false);
         } catch (final AIServiceException e) {
             assertNotNull(e.getResponse());
@@ -772,7 +728,7 @@ public abstract class ProtocolTestBase {
         final AIResponse domainsResponse = makeRequest(aiDataService, domainsRequest);
 
         assertEquals("domains", domainsResponse.getResult().getSource());
-        assertEquals("smalltalk.greetings", domainsResponse.getResult().getAction());
+        assertEquals("smalltalk.greetings.hello", domainsResponse.getResult().getAction());
 
         final AIRequest agentRequest = new AIRequest("not from domains");
         final AIResponse agentResponse = makeRequest(aiDataService, agentRequest);
