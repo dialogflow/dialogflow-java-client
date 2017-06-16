@@ -52,7 +52,7 @@ public class ResponseMessageTest {
 
   private static final String TEST_PAYLOAD = "{\"payload\":{\"field1\":11},\"type\":4}";
 
-  private static final String TEST_BAD_TYPE = "{\"field1\":1,\"type\":5}";
+  private static final String TEST_BAD_TYPE = "{\"field1\":1,\"type\":100}";
 
   @Test
   public void testResponseSpeechDeserialization() {

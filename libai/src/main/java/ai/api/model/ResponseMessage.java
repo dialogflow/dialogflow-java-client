@@ -23,9 +23,19 @@ package ai.api.model;
 
 import java.lang.reflect.Type;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
+
+import ai.api.model.GoogleAssistantResponseMessages.ResponseBasicCard;
+import ai.api.model.GoogleAssistantResponseMessages.ResponseCarouselCard;
+import ai.api.model.GoogleAssistantResponseMessages.ResponseChatBubble;
+import ai.api.model.GoogleAssistantResponseMessages.ResponseLinkOutChip;
+import ai.api.model.GoogleAssistantResponseMessages.ResponseListCard;
+import ai.api.model.GoogleAssistantResponseMessages.ResponseSuggestionChips;
 
 /**
  * Base model class for 
@@ -34,15 +44,29 @@ import com.google.gson.annotations.Expose;
 public abstract class ResponseMessage {
 
   @Expose
-  private int type;
-  
+  private final MessageType type;
+
+  @Expose
+  private final Platform platform;
+
   /**
-   * Default constructor initializing message type code 
+   * Constructor initializing message type code 
    * @param type Message type. Cannot be <code>null</code>.
    */
   protected ResponseMessage(MessageType type) {
+    this(type, null);
+  }
+  
+  /**
+   * Constructor initializing message type code and platform
+   * @param type Message type. Cannot be <code>null</code>.
+   * @param platform Platform type. If <code>null</code> then
+   *    default value will be used
+   */
+  protected ResponseMessage(MessageType type, Platform platform) {
     assert type != null;
-    this.type = type.code;
+    this.type = type;
+    this.platform = platform != null ? platform : Platform.DEFAULT;
   }
 
   /**
@@ -50,21 +74,31 @@ public abstract class ResponseMessage {
    */
   public static enum MessageType {
     /** Text response message object */
-    SPEECH(0, ResponseSpeech.class),
+    SPEECH(0, "message", ResponseSpeech.class),
     /** Card message object */
-    CARD(1, ResponseCard.class),
+    CARD(1, "card", ResponseCard.class),
     /** Quick replies message object */
-    QUICK_REPLY(2, ResponseQuickReply.class),
+    QUICK_REPLY(2, "quick_reply", ResponseQuickReply.class),
     /** Image message object */
-    IMAGE(3, ResponseImage.class),
+    IMAGE(3, "image", ResponseImage.class),
     /** Custom payload message object */
-    PAYLOAD(4, ResponsePayload.class);
-
+    PAYLOAD(4, "custom_payload", ResponsePayload.class),
+    CHAT_BUBBLE(5, "simple_response", ResponseChatBubble.class),
+    BASIC_CARD(6, "basic_card", ResponseBasicCard.class),
+    LIST_CARD(7, "list_card", ResponseListCard.class),
+    SUGGESTION_CHIPS(8, "suggestion_chips", ResponseSuggestionChips.class),
+    CAROUSEL_CARD(9, "carousel_card", ResponseCarouselCard.class),
+    LINK_OUT_CHIP(10, "link_out_chip", ResponseLinkOutChip.class);
+    
     private final int code;
+    private final String name;
     private final Type type;
 
-    private MessageType(int code, Type curClass) {
+    private MessageType(int code, String name, Type curClass) {
+      assert name != null;
+      assert curClass != null;
       this.code = code;
+      this.name = name;
       this.type = curClass;
     }
 
@@ -76,10 +110,72 @@ public abstract class ResponseMessage {
     }
 
     /**
+     * @return Type name presentation
+     */
+    public String getName() {
+      return name;
+    }
+
+    /**
      * @return Related class {@link Type}
      */
     public Type getType() {
       return type;
+    }
+    
+
+    
+    private static Map<Integer,MessageType> typeByCode = new HashMap<>();
+    private static Map<String,MessageType> typeByName = new HashMap<>();
+
+    static {
+      for (MessageType type : values()) {
+        typeByCode.put(type.code, type);
+        typeByName.put(type.name.toLowerCase(), type);
+      }
+    }
+    
+    public static MessageType fromCode(int code) {
+      return typeByCode.get(code);
+    }
+    
+    public static MessageType fromName(String name) {
+      return typeByName.get(name != null ? name.toLowerCase() : null);
+    }
+  }
+
+  public enum Platform {
+    DEFAULT(null),
+    GOOGLE("google"),
+    FACEBOOK("facebook"),
+    SLACK("slack"),
+    TELEGRAM("telegram"),
+    KIK("kik"),
+    VIBER("viber"),
+    SKYPE("skype"),
+    LINE("line");
+
+    private final String name;
+
+    Platform(String name) {
+      this.name = name;
+    }
+    
+    public String getName() {
+      return name;
+    }
+    
+    private static Map<String,Platform> platformByName = new HashMap<>();
+    
+    static {
+      for (Platform platform : values()) {
+        String platformName = platform.getName();
+        platformByName.put(platformName != null ? platformName.toLowerCase() : null, platform);
+      }
+    }
+    
+    public static Platform fromName(String name) {
+      return platformByName.get(name != null ? name.toLowerCase() : null);
     }
   }
 

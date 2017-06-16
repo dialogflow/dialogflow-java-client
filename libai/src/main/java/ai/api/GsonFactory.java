@@ -29,11 +29,13 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 import ai.api.model.ResponseMessage;
 import ai.api.model.ResponseMessage.MessageType;
+import ai.api.model.ResponseMessage.Platform;
 
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
@@ -49,6 +51,8 @@ public class GsonFactory {
   private static final Gson PROTOCOL_GSON = new GsonBuilder()
       .setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).toPattern())
       .registerTypeAdapter(ResponseMessage.class, new ResponseItemAdapter())
+      .registerTypeAdapter(ResponseMessage.MessageType.class, new ResponseMessageTypeAdapter())
+      .registerTypeAdapter(ResponseMessage.Platform.class, new ResponseMessagePlatformAdapter())
       .registerTypeAdapter(ResponseMessage.ResponseSpeech.class, new ResponseSpeechDeserializer())
       .create();
 
@@ -67,23 +71,64 @@ public class GsonFactory {
   public static GsonFactory getDefaultFactory() {
     return DEFAULT_FACTORY;
   }
+  
+  private static class ResponseMessagePlatformAdapter implements
+    JsonDeserializer<ResponseMessage.Platform>,
+    JsonSerializer<ResponseMessage.Platform> {
 
+    @Override
+    public JsonElement serialize(Platform src, Type typeOfT, JsonSerializationContext context) {
+      return context.serialize(src.getName());
+    }
+
+    @Override
+    public Platform deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+        throws JsonParseException {
+      String name = json.getAsString();
+      if (name == null) {
+        return Platform.DEFAULT;
+      }
+      Platform result = Platform.fromName(name);
+      if (result == null) {
+        throw new JsonParseException(String.format("Unexpected platform name: %s", json));
+      }
+      return result;
+    }
+  }
+  private static class ResponseMessageTypeAdapter implements
+    JsonDeserializer<ResponseMessage.MessageType>,
+    JsonSerializer<ResponseMessage.MessageType> {
+
+    @Override
+    public JsonElement serialize(MessageType src, Type typeOfT, JsonSerializationContext context) {
+      return context.serialize(src.getCode() <= 4 ? src.getCode() : src.getName());
+    }
+
+    @Override
+    public MessageType deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+        throws JsonParseException {
+      JsonPrimitive jsonValue = json.getAsJsonPrimitive();
+      MessageType result = null;
+      if (jsonValue.isNumber()) {
+        result = MessageType.fromCode(jsonValue.getAsInt());
+      } else {
+        result = MessageType.fromName(jsonValue.getAsString());
+      }
+      if (result == null) {
+        throw new JsonParseException(String.format("Unexpected message type value: %s", jsonValue));
+      }
+      return result;
+    }
+  }
+  
   private static class ResponseItemAdapter implements JsonDeserializer<ResponseMessage>,
       JsonSerializer<ResponseMessage> {
 
     @Override
     public ResponseMessage deserialize(JsonElement json, Type typeOfT,
         JsonDeserializationContext context) throws JsonParseException {
-
-      int typeCode = json.getAsJsonObject().get("type").getAsInt();
-
-      for (MessageType type : MessageType.values()) {
-        if (type.getCode() == typeCode) {
-          return context.deserialize(json, type.getType());
-        }
-      }
-
-      throw new JsonParseException(String.format("Unexpected message type value: %d", typeCode));
+      MessageType messageType = context.deserialize(json.getAsJsonObject().get("type"), MessageType.class);
+      return context.deserialize(json, messageType.getType());
     }
 
     @Override
