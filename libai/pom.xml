@@ -11,7 +11,7 @@
 		<groupId>ai.api</groupId>
 		<artifactId>libai-base</artifactId>
 		<relativePath>..</relativePath>
-		<version>1.4.9</version>
+		<version>1.5.10</version>
 	</parent>
 	<build>
 		<finalName>libai</finalName>
