@@ -14,6 +14,7 @@
 		<maven.compiler.target>1.7</maven.compiler.target>
 		<maven.compiler.source>1.7</maven.compiler.source>
 		<maven-assembly-plugin-version>2.4</maven-assembly-plugin-version>
+		<slf4j-version>1.7.25</slf4j-version>
 	</properties>
 	<modules>
 		<module>text-client</module>
@@ -32,6 +33,11 @@
 			<groupId>ai.api</groupId>
 			<artifactId>libai</artifactId>
 			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-jdk14</artifactId>
+			<version>${slf4j-version}</version>
 		</dependency>
 	</dependencies>
 	<build>
