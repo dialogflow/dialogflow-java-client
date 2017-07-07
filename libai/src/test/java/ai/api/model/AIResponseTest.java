@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 
 import org.junit.Test;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -13,6 +14,7 @@ import java.util.Locale;
 import java.util.Map.Entry;
 
 import ai.api.GsonFactory;
+import ai.api.util.ParametersConverter;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -21,32 +23,42 @@ import static org.junit.Assert.assertTrue;
 
 public class AIResponseTest {
 
-    public static final String TEST_JSON = "{\n" +
-            "  \"id\": \"d872e7d9-d2ee-4ebd-aaff-655bfc8fbf33\",\n" +
-            "  \"timestamp\": \"2015-03-18T09:54:36.216Z\",\n" +
-            "  \"lang\":\"en\",\n" + 
-            "  \"result\": {\n" +
-            "    \"resolvedQuery\": \"remind feed cat tomorrow 7 am\",\n" +
-            "    \"action\": \"task_create\",\n" +
-            "    \"parameters\": {\n" +
-            "      \"date\": \"\",\n" +
-            "      \"date-time\": \"2016-12-21T07:00:00"+(new SimpleDateFormat("Z", Locale.US).format(Calendar.getInstance().getTime()))+"\",\n" +
-            "      \"time\": \"\",\n" +
-            "      \"text\": \"feed cat\",\n" +
-            "      \"priority\": \"\",\n" +
-            "      \"remind\": \"remind\",\n" +
-            "      \"complex_param\": {\"nested_key\": \"nested_value\"}\n" +
-            "    },\n" +
-            "    \"score\":0.875\n" +
-            "  },\n" +
-            "  \"status\": {\n" +
-            "    \"code\": 200,\n" +
-            "    \"errorType\": \"success\"\n" +
-            "  },\n" +
-            "  \"sessionId\":\"0123456789\"\n" +
-            "}";
+    public static final String TEST_JSON;
 
     final static Gson gson = GsonFactory.getDefaultFactory().getGson();
+
+    static {
+      Calendar testTime = Calendar.getInstance(Locale.US);
+      testTime.set(2016, Calendar.DECEMBER, 21, 7, 0, 0);
+
+      DateFormat DATE_TIME_FORMAT =
+          new SimpleDateFormat(ParametersConverter.PROTOCOL_DATE_TIME_FORMAT, Locale.US);
+
+      TEST_JSON = "{\n" +
+          "  \"id\": \"d872e7d9-d2ee-4ebd-aaff-655bfc8fbf33\",\n" +
+          "  \"timestamp\": \"2015-03-18T09:54:36.216Z\",\n" +
+          "  \"lang\":\"en\",\n" + 
+          "  \"result\": {\n" +
+          "    \"resolvedQuery\": \"remind feed cat tomorrow 7 am\",\n" +
+          "    \"action\": \"task_create\",\n" +
+          "    \"parameters\": {\n" +
+          "      \"date\": \"\",\n" +
+          "      \"date-time\": \""+DATE_TIME_FORMAT.format(testTime.getTime())+"\",\n" +
+          "      \"time\": \"\",\n" +
+          "      \"text\": \"feed cat\",\n" +
+          "      \"priority\": \"\",\n" +
+          "      \"remind\": \"remind\",\n" +
+          "      \"complex_param\": {\"nested_key\": \"nested_value\"}\n" +
+          "    },\n" +
+          "    \"score\":0.875\n" +
+          "  },\n" +
+          "  \"status\": {\n" +
+          "    \"code\": 200,\n" +
+          "    \"errorType\": \"success\"\n" +
+          "  },\n" +
+          "  \"sessionId\":\"0123456789\"\n" +
+          "}";
+    }
 
     @Test
     public void trimParametersTest() {

@@ -49,7 +49,10 @@ public class ParametersConverterTest {
 
     @Test
     public void parseDateTimeTest() throws ParseException {
-        final String input = "2016-12-21T07:00:00" + new SimpleDateFormat("Z").format(new Date());
+        Calendar src = Calendar.getInstance();
+        src.set(2016, Calendar.DECEMBER, 21, 7, 0, 0);
+        final String input =
+            new SimpleDateFormat(ParametersConverter.PROTOCOL_DATE_TIME_FORMAT).format(src.getTime());
 
         final Calendar date = Calendar.getInstance();
         date.setTime(ParametersConverter.parseDateTime(input));
