@@ -1,7 +1,7 @@
 Java SDK for api.ai
 ==================
 
-[![Release status](https://travis-ci.org/api-ai/apiai-java-sdk.svg?branch=master)](https://travis-ci.org/api-ai/apiai-java-sdk) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/ai.api/libai/badge.svg)](https://maven-badges.herokuapp.com/maven-central/ai.api/libai)
+[![Release status](https://travis-ci.org/api-ai/apiai-java-client.svg?branch=master)](https://travis-ci.org/api-ai/apiai-java-client) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/ai.api/libai/badge.svg)](https://maven-badges.herokuapp.com/maven-central/ai.api/libai)
 
 The API.AI Java SDK makes it easy to integrate speech recognition with [API.AI](http://www.api.ai) natural language processing API on Android devices. API.AI allows using voice commands and integration with dialog scenarios defined for a particular agent in API.AI.
 
