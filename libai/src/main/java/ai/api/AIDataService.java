@@ -41,8 +41,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ai.api.http.HttpClient;
 import ai.api.model.AIContext;
@@ -56,7 +56,7 @@ import ai.api.model.Status;
  */
 public class AIDataService {
 
-  private static final Logger Log = LogManager.getLogger(AIDataService.class);
+  private static final Logger logger = LoggerFactory.getLogger(AIDataService.class);
   private static final AIServiceContext UNDEFINED_SERVICE_CONTEXT = null;
   private static final String REQUEST_METHOD_POST = "POST";
   private static final String REQUEST_METHOD_DELETE = "DELETE";
@@ -162,7 +162,7 @@ public class AIDataService {
       throw new IllegalArgumentException("Request argument must not be null");
     }
 
-    Log.debug("Start request");
+    logger.debug("Start request");
 
     try {
 
@@ -188,7 +188,7 @@ public class AIDataService {
             "Empty response from ai service. Please check configuration and Internet connection.");
       }
 
-      Log.debug("Response json: " + response.replaceAll("[\r\n]+", " "));
+      logger.debug("Response json: " + response.replaceAll("[\r\n]+", " "));
 
       final AIResponse aiResponse = GSON.fromJson(response, AIResponse.class);
 
@@ -206,7 +206,7 @@ public class AIDataService {
       return aiResponse;
 
     } catch (final MalformedURLException e) {
-      Log.error("Malformed url should not be raised", e);
+      logger.error("Malformed url should not be raised", e);
       throw new AIServiceException("Wrong configuration. Please, connect to API.AI Service support",
           e);
     } catch (final JsonSyntaxException je) {
@@ -265,7 +265,7 @@ public class AIDataService {
   public AIResponse voiceRequest(final InputStream voiceStream, final RequestExtras requestExtras,
       final AIServiceContext serviceContext) throws AIServiceException {
     assert voiceStream != null;
-    Log.debug("Start voice request");
+    logger.debug("Start voice request");
 
     try {
       final AIRequest request = new AIRequest();
@@ -283,7 +283,7 @@ public class AIDataService {
 
       final String queryData = GSON.toJson(request);
 
-      Log.debug("Request json: " + queryData);
+      logger.debug("Request json: " + queryData);
 
       final String response = doSoundRequest(voiceStream, queryData, additionalHeaders);
 
@@ -291,7 +291,7 @@ public class AIDataService {
         throw new AIServiceException("Empty response from ai service. Please check configuration.");
       }
 
-      Log.debug("Response json: " + response);
+      logger.debug("Response json: " + response);
 
       final AIResponse aiResponse = GSON.fromJson(response, AIResponse.class);
 
@@ -309,7 +309,7 @@ public class AIDataService {
       return aiResponse;
 
     } catch (final MalformedURLException e) {
-      Log.error("Malformed url should not be raised", e);
+      logger.error("Malformed url should not be raised", e);
       throw new AIServiceException("Wrong configuration. Please, connect to AI Service support", e);
     } catch (final JsonSyntaxException je) {
       throw new AIServiceException(
@@ -332,7 +332,7 @@ public class AIDataService {
       final AIResponse response = request(cleanRequest);
       return !response.isError();
     } catch (final AIServiceException e) {
-      Log.error("Exception while contexts clean.", e);
+      logger.error("Exception while contexts clean.", e);
       return false;
     }
   }
@@ -577,7 +577,7 @@ public class AIDataService {
         throw new AIServiceException(
             "Empty response from ai service. Please check configuration and Internet connection.");
       }
-      Log.debug("Response json: " + response);
+      logger.debug("Response json: " + response);
 
       final AIResponse aiResponse = GSON.fromJson(response, AIResponse.class);
 
@@ -594,7 +594,7 @@ public class AIDataService {
       return aiResponse;
 
     } catch (final MalformedURLException e) {
-      Log.error("Malformed url should not be raised", e);
+      logger.error("Malformed url should not be raised", e);
       throw new AIServiceException("Wrong configuration. Please, connect to AI Service support", e);
     } catch (final JsonSyntaxException je) {
       throw new AIServiceException(
@@ -659,7 +659,7 @@ public class AIDataService {
 
       final String queryData = requestJson;
 
-      Log.debug("Request json: " + queryData);
+      logger.debug("Request json: " + queryData);
 
       if (config.getProxy() != null) {
         connection = (HttpURLConnection) url.openConnection(config.getProxy());
@@ -697,16 +697,16 @@ public class AIDataService {
           final InputStream errorStream = connection.getErrorStream();
           if (errorStream != null) {
             final String errorString = IOUtils.readAll(errorStream);
-            Log.debug(errorString);
+            logger.debug(errorString);
             return errorString;
           } else {
             throw new AIServiceException("Can't connect to the api.ai service.", e);
           }
         } catch (final IOException ex) {
-          Log.warn("Can't read error response", ex);
+          logger.warn("Can't read error response", ex);
         }
       }
-      Log.error(
+      logger.error(
           "Can't make request to the API.AI service. Please, check connection settings and API access token.",
           e);
       throw new AIServiceException(
@@ -763,7 +763,7 @@ public class AIDataService {
     try {
       final URL url = new URL(config.getQuestionUrl(getSessionId(serviceContext)));
 
-      Log.debug("Connecting to {}", url);
+      logger.debug("Connecting to {}", url);
 
       if (config.getProxy() != null) {
         connection = (HttpURLConnection) url.openConnection(config.getProxy());
@@ -798,7 +798,7 @@ public class AIDataService {
     } catch (final IOException e) {
       if (httpClient != null) {
         final String errorString = httpClient.getErrorString();
-        Log.debug(errorString);
+        logger.debug(errorString);
         if (!StringUtils.isEmpty(errorString)) {
           return errorString;
         } else if (e instanceof HttpRetryException) {
@@ -811,7 +811,7 @@ public class AIDataService {
         }
       }
 
-      Log.error(
+      logger.error(
           "Can't make request to the API.AI service. Please, check connection settings and API.AI keys.",
           e);
       throw new AIServiceException(
@@ -857,7 +857,7 @@ public class AIDataService {
       final String requestMethod = method != null ? method : DEFAULT_REQUEST_METHOD;
 
 
-      Log.debug("Request json: " + queryData);
+      logger.debug("Request json: " + queryData);
 
       if (config.getProxy() != null) {
         connection = (HttpURLConnection) url.openConnection(config.getProxy());
@@ -913,16 +913,16 @@ public class AIDataService {
           final InputStream errorStream = connection.getErrorStream();
           if (errorStream != null) {
             final String errorString = IOUtils.readAll(errorStream);
-            Log.debug(errorString);
+            logger.debug(errorString);
             throw new AIServiceException(errorString, e);
           } else {
             throw new AIServiceException("Can't connect to the api.ai service.", e);
           }
         } catch (final IOException ex) {
-          Log.warn("Can't read error response", ex);
+          logger.warn("Can't read error response", ex);
         }
       }
-      Log.error(
+      logger.error(
           "Can't make request to the API.AI service. Please, check connection settings and API access token.",
           e);
       throw new AIServiceException(

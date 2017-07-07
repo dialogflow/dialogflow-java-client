@@ -31,12 +31,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HttpClient {
 
-	private static final Logger Log = LogManager.getLogger(HttpClient.class);
+	private static final Logger logger = LoggerFactory.getLogger(HttpClient.class);
     private static final int CHUNK_LENGTH = 2048;
     private static final int BUFFER_LENGTH = 4096;
 
@@ -94,7 +94,7 @@ public class HttpClient {
         //os.write( ("Content-Transfer-Encoding: binary\r\n"  ).getBytes());
         os.write("\r\n".getBytes());
 
-        Log.debug("Sound write start");
+        logger.debug("Sound write start");
 
         FileOutputStream outputStream = null;
 
@@ -103,7 +103,7 @@ public class HttpClient {
             if (!cacheDir.exists()) {
                 cacheDir.mkdirs();
             }
-            Log.debug(cacheDir.getAbsolutePath());
+            logger.debug(cacheDir.getAbsolutePath());
 
             final File soundFile = new File(cacheDir, "log.wav");
             outputStream = new FileOutputStream(soundFile, false);
@@ -130,7 +130,7 @@ public class HttpClient {
             outputStream.close();
         }
 
-        Log.debug("Sound write finished");
+        logger.debug("Sound write finished");
 
         os.write("\r\n".getBytes());
     }
