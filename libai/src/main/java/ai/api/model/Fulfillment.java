@@ -56,6 +56,9 @@ public class Fulfillment implements Serializable {
   @SerializedName("contextOut")
   private List<AIOutputContext> contextOut;
 
+  @SerializedName("followupEvent")
+  private AIEvent followupEvent;
+
   /** Get voice response to the request */
   public String getSpeech() {
     return speech;
@@ -152,5 +155,15 @@ public class Fulfillment implements Serializable {
   /** Set sequence of context objects set after intent completion. */
   public void setContextOut(final AIOutputContext... contextOut) {
     setContextOut(Arrays.asList(contextOut));
+  }
+
+  /** Get follow up event to be triggered*/
+  public AIEvent getFollowupEvent() {
+    return followupEvent;
+  }
+
+  /** Set follow up event to be triggered */
+  public void setFollowupEvent(AIEvent followupEvent) {
+    this.followupEvent = followupEvent;
   }
 }
