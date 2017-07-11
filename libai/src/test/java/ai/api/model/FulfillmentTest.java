@@ -45,7 +45,8 @@ public class FulfillmentTest {
   private static final String TEST_FULFILLMENT_WEBHOOK_RESPONSE =
       "{\"speech\":\"text\"," + "\"displayText\":\"DisplayText\", \"source\":\"webhook\", "
           + "\"contextOut\": [{\"name\":\"weather\", \"lifespan\":2, \"parameters\":{\"city\":\"Rome\"}}],"
-          + "\"data\":{\"param\":\"value\"}}";
+          + "\"data\":{\"param\":\"value\"},"
+          + "\"followupEvent\":{\"data\":{\"event-param\":\"event-value\"},\"name\":\"test-event\"}}";
   
   private static final String TEST_FULFILLMENT_WITH_MESSAGES = "{\"speech\":\"test speech\","+
       "\"messages\":[{\"imageUrl\":\"url image\",\"type\":3},{\"title\":\"Quick title\","+
@@ -94,6 +95,11 @@ public class FulfillmentTest {
 
     assertEquals(1, fulfillment.getData().size());
     assertEquals("value", fulfillment.getData().get("param").getAsString());
+
+    assertNotNull(fulfillment.getFollowupEvent());
+    assertEquals("test-event", fulfillment.getFollowupEvent().getName());
+    assertEquals(1, fulfillment.getFollowupEvent().getData().size());
+    assertEquals("event-value", fulfillment.getFollowupEvent().getData().get("event-param"));
   }
 
   @Test
