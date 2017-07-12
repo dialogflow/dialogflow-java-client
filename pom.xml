@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>ai.api</groupId>
     <artifactId>libai-base</artifactId>
-    <version>1.5.11</version>
+    <version>1.5.10</version>
     <packaging>pom</packaging>
 
     <name>Api.ai SDK</name>
