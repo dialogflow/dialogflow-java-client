@@ -49,6 +49,8 @@ public class AIRequest extends QuestionMetadata implements Serializable {
     @SerializedName("event")
     private AIEvent event;
 
+    private AIOriginalRequest originalRequest;
+
     public AIRequest() {
     }
 
@@ -113,6 +115,22 @@ public class AIRequest extends QuestionMetadata implements Serializable {
 
     public void setEvent(AIEvent event) {
         this.event = event;
+    }
+
+    /**
+     * Full request coming from the integrated platform (Facebook Messenger, Slack, etc.) 
+     * @return <code>null</code> if request is not defined
+     */
+    public final AIOriginalRequest getOriginalRequest() {
+      return originalRequest;
+    }
+
+    /**
+     * Set full request coming from the integrated platform (Facebook Messenger, Slack, etc.)
+     * @param originalRequest <code>null</code> if request is not defined
+     */
+    public final void setOriginalRequest(AIOriginalRequest originalRequest) {
+      this.originalRequest = originalRequest;
     }
 
     @Override
