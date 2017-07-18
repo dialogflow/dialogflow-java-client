@@ -166,8 +166,12 @@ public class AIDataService {
 
     try {
 
-      request.setLanguage(config.getApiAiLanguage());
-      request.setSessionId(getSessionId(serviceContext));
+      if (StringUtils.isEmpty(request.getLanguage())) {
+        request.setLanguage(config.getApiAiLanguage());
+      }
+      if (StringUtils.isEmpty(request.getSessionId())) {
+        request.setSessionId(getSessionId(serviceContext));
+      }
       if (StringUtils.isEmpty(request.getTimezone())) {
         request.setTimezone(getTimeZone(serviceContext));
       }
@@ -180,7 +184,7 @@ public class AIDataService {
       }
 
       final String queryData = GSON.toJson(request);
-      final String response = doTextRequest(config.getQuestionUrl(getSessionId(serviceContext)),
+      final String response = doTextRequest(config.getQuestionUrl(request.getSessionId()),
           queryData, additionalHeaders);
 
       if (StringUtils.isEmpty(response)) {
