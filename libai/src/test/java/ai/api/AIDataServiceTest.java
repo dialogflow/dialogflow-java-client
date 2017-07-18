@@ -9,6 +9,7 @@ import java.util.TimeZone;
 
 import org.junit.Test;
 
+import ai.api.model.AIOriginalRequest;
 import ai.api.model.AIRequest;
 import ai.api.model.AIResponse;
 
@@ -66,6 +67,19 @@ public class AIDataServiceTest {
     dataService.request(request, customContext);
     assertTrue(dataService.endpointValue.indexOf("sessionId=requestSessionId") > 0);
     assertTrue(dataService.requestJsonValue.indexOf("\"sessionId\":\"requestSessionId\"") > 0);
+  }
+  
+  @Test
+  public void testOriginalRequest() throws AIServiceException {
+    TestableAIDataService dataService = new TestableAIDataService();
+    AIRequest request = new AIRequest();
+    
+    dataService.request(request);
+    assertTrue(dataService.requestJsonValue.indexOf("\"originalRequest\":{}") == -1);
+    
+    request.setOriginalRequest(new AIOriginalRequest());
+    dataService.request(request);
+    assertTrue(dataService.requestJsonValue.indexOf("\"originalRequest\":{}") > 0);
   }
 
   private static String getNonDefaultTimeZoneID() {
