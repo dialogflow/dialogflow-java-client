@@ -1,9 +1,12 @@
 package ai.api.model;
 
+import ai.api.model.ResponseMessage.ResponsePayload;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.util.List;
 import org.junit.Test;
 
 import java.text.DateFormat;
@@ -153,5 +156,79 @@ public class AIResponseTest {
         for (Entry<String,JsonElement> parameter : response.getResult().getParameters().entrySet()) {
           System.out.printf("%s : %s%n", parameter.getKey(), parameter.getValue());
         }
+    }
+
+    @Test
+    public void complexResponseTest(){
+      final String responseJson = "{\n"
+          + "  \"id\": \"b5765188-227c-465f-abc4-38674d18e1b6\",\n"
+          + "  \"timestamp\": \"2017-07-19T21:24:40.661Z\",\n"
+          + "  \"lang\": \"en\",\n"
+          + "  \"result\": {\n"
+          + "    \"source\": \"agent\",\n"
+          + "    \"resolvedQuery\": \"hi\",\n"
+          + "    \"action\": \"\",\n"
+          + "    \"actionIncomplete\": false,\n"
+          + "    \"parameters\": {},\n"
+          + "    \"contexts\": [],\n"
+          + "    \"metadata\": {\n"
+          + "      \"intentId\": \"df4522d6-5222-4bab-96e1-2218b4a12561\",\n"
+          + "      \"webhookUsed\": \"false\",\n"
+          + "      \"webhookForSlotFillingUsed\": \"false\",\n"
+          + "      \"intentName\": \"hi\"\n"
+          + "    },\n"
+          + "    \"fulfillment\": {\n"
+          + "      \"speech\": \"Hi there!\",\n"
+          + "      \"messages\": [\n"
+          + "        {\n"
+          + "          \"type\": 0,\n"
+          + "          \"speech\": \"Hi there!\"\n"
+          + "        },\n"
+          + "        {\n"
+          + "          \"type\": 4,\n"
+          + "          \"payload\": {\n"
+          + "            \"native-android\": {\n"
+          + "              \"quick-responses\": [\n"
+          + "                \"Yes\",\n"
+          + "                \"No\",\n"
+          + "                \"I don't know\"\n"
+          + "              ]\n"
+          + "            }\n"
+          + "          }\n"
+          + "        }\n"
+          + "      ]\n"
+          + "    },\n"
+          + "    \"score\": 1\n"
+          + "  },\n"
+          + "  \"status\": {\n"
+          + "    \"code\": 200,\n"
+          + "    \"errorType\": \"success\"\n"
+          + "  },\n"
+          + "  \"sessionId\": \"9bdd9303-4937-4464-82f7-3d260d7283c3\"\n"
+          + "}";
+
+      final AIResponse aiResponse = gson.fromJson(responseJson, AIResponse.class);
+
+      List<ResponseMessage> messages = aiResponse.getResult().getFulfillment().getMessages();
+
+      for (ResponseMessage message : messages) {
+        if (message instanceof ResponsePayload) {
+          final ResponsePayload customPayload = (ResponsePayload)message;
+
+          final JsonObject payload = customPayload.getPayload();
+
+          final JsonObject androidPayload = payload.getAsJsonObject("native-android");
+          final JsonArray quickResponses = androidPayload.getAsJsonArray("quick-responses");
+
+          JsonElement firstReply = quickResponses.get(0);
+          assertEquals("Yes", firstReply.getAsString());
+
+          JsonElement secondReply = quickResponses.get(1);
+          assertEquals("No", secondReply.getAsString());
+
+          JsonElement thirdReply = quickResponses.get(2);
+          assertEquals("I don't know", thirdReply.getAsString());
+        }
+      }
     }
 }
