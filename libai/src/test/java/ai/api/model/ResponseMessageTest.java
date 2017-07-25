@@ -154,7 +154,13 @@ public class ResponseMessageTest {
   public void testBadType() {
     gson.fromJson(TEST_BAD_TYPE, ResponseMessage.class);
   }
-  
+
+  @Test
+  public void testResponseSpeechDeserializationSerialization() {
+    final String json = "{\"speech\":[\"text\"],\"type\":0}";
+    assertEquals(json, gson.toJson(gson.fromJson(json, ResponseMessage.class)));
+  }
+
   private static class PayloadBody {
     @SuppressWarnings("unused") /* this field used by serialization class */ 
     private final int field1;

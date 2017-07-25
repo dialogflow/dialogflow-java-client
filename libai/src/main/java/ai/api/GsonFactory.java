@@ -46,17 +46,23 @@ import java.util.Locale;
  */
 public class GsonFactory {
 
-  private static final Gson DEFAULT_GSON = new GsonBuilder().create();
+  private static final Gson SIMPLIFIED_GSON;
 
-  private static final Gson PROTOCOL_GSON = new GsonBuilder()
-      .setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).toPattern())
-      .registerTypeAdapter(ResponseMessage.class, new ResponseItemAdapter())
-      .registerTypeAdapter(ResponseMessage.MessageType.class, new ResponseMessageTypeAdapter())
-      .registerTypeAdapter(ResponseMessage.Platform.class, new ResponseMessagePlatformAdapter())
-      .registerTypeAdapter(ResponseMessage.ResponseSpeech.class, new ResponseSpeechDeserializer())
-      .create();
+  private static final Gson PROTOCOL_GSON;
 
   private static final GsonFactory DEFAULT_FACTORY = new GsonFactory();
+  
+  static {
+    GsonBuilder gsonBuilder = new GsonBuilder()
+        .setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).toPattern())
+        .registerTypeAdapter(ResponseMessage.class, new ResponseItemAdapter())
+        .registerTypeAdapter(ResponseMessage.MessageType.class, new ResponseMessageTypeAdapter())
+        .registerTypeAdapter(ResponseMessage.Platform.class, new ResponseMessagePlatformAdapter());
+    SIMPLIFIED_GSON = gsonBuilder.create();
+    
+    gsonBuilder.registerTypeAdapter(ResponseMessage.ResponseSpeech.class, new ResponseSpeechAdapter());
+    PROTOCOL_GSON = gsonBuilder.create();
+  }
 
   /**
    * Get a {@link Gson} object 
@@ -138,17 +144,27 @@ public class GsonFactory {
     }
   }
 
-  private static class ResponseSpeechDeserializer implements JsonDeserializer<ResponseMessage> {
+  private static class ResponseSpeechAdapter implements JsonDeserializer<ResponseMessage>,
+  JsonSerializer<ResponseMessage> {
     public ResponseMessage.ResponseSpeech deserialize(JsonElement json, Type typeOfT,
         JsonDeserializationContext context) throws JsonParseException {
 
-      if (json.isJsonObject() && ((JsonObject) json).get("speech").isJsonPrimitive()) {
-        JsonArray array = new JsonArray();
-        array.add(((JsonObject) json).get("speech"));
-        ((JsonObject) json).add("speech", array);
+      if (json.isJsonObject()) {
+        final JsonObject jsonObject = (JsonObject) json;
+        final JsonElement speechValue = jsonObject.get("speech");
+        if (speechValue.isJsonPrimitive()) {
+          JsonArray array = new JsonArray();
+          array.add(speechValue);
+          jsonObject.add("speech", array);
+        }
       }
 
-      return DEFAULT_GSON.fromJson(json, typeOfT);
+      return SIMPLIFIED_GSON.fromJson(json, typeOfT);
+    }
+
+    @Override
+    public JsonElement serialize(ResponseMessage src, Type typeOfSrc, JsonSerializationContext context) {
+      return SIMPLIFIED_GSON.toJsonTree(src, ResponseMessage.class);
     }
   }
 }
