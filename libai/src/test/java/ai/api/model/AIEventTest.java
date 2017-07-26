@@ -96,11 +96,11 @@ public class AIEventTest {
     public void CreateAIRequest() {
         final AIRequest aiRequest = new AIRequest();
         aiRequest.setContexts(new ArrayList<AIContext>());
-        aiRequest.setQuery("test");
+        aiRequest.setQuery(null);
         aiRequest.setConfidence(new float[]{0.5f, 9.6f});
         final AIEvent aiEvent = new AIEvent("test");
         aiEvent.addDataField("heart", "ace");
         aiRequest.setEvent(aiEvent);
-        assertEquals("{\"query\":[\"test\"],\"confidence\":[0.5,9.6],\"contexts\":[],\"event\":{\"name\":\"test\",\"data\":{\"heart\":\"ace\"}}}", gson.toJson(aiRequest));
+        assertEquals("{\"confidence\":[0.5,9.6],\"contexts\":[],\"event\":{\"name\":\"test\",\"data\":{\"heart\":\"ace\"}}}", gson.toJson(aiRequest));
     }
 }

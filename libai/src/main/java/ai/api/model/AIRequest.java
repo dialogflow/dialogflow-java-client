@@ -59,11 +59,7 @@ public class AIRequest extends QuestionMetadata implements Serializable {
     }
 
     public void setQuery(final String query) {
-        if (StringUtils.isEmpty(query)) {
-            throw new IllegalStateException("Query must not be empty");
-        }
-
-        this.query = new String[]{query};
+        this.query = StringUtils.isEmpty(query) ? null : new String[]{query};
         confidence = null;
     }
 
