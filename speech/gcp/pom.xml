@@ -6,7 +6,7 @@
     <parent>
     	<groupId>ai.api</groupId>
     	<artifactId>libai-base</artifactId>
-        <version>1.6.11</version>
+        <version>1.6.12</version>
     	<relativePath>../../pom.xml</relativePath>
     </parent>
     <properties>

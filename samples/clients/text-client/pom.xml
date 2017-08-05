@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>ai.api.libai.samples</groupId>
 		<artifactId>libai-samples</artifactId>
-		<version>1.6.11</version>
+		<version>1.6.12</version>
 	</parent>
 	<url>https://github.com/api-ai/apiai-java-sdk/tree/master/examples/text-client</url>
 	<build>
