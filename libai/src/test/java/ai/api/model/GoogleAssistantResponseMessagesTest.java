@@ -26,9 +26,16 @@ public class GoogleAssistantResponseMessagesTest {
 
   final static Gson gson = GsonFactory.getDefaultFactory().getGson();
 
-  private final String TEST_CHAT_BUBBLE = "{"
-      + "\"customizeAudio\":true,\"items\":"
-      + "[{\"textToSpeech\":\"hello\",\"ssml\":\"ssmlText\",\"displayText\":\"Hello\"}],"
+  private final String TEST_CHAT_BUBBLE_SEVERAL_ITEMS = "{"
+      + "\"customizeAudio\":true,\"items\":["
+      + "{\"textToSpeech\":\"hello1\",\"ssml\":\"ssmlText1\",\"displayText\":\"Hello1\"},"
+      + "{\"textToSpeech\":\"hello2\",\"ssml\":\"ssmlText2\",\"displayText\":\"Hello2\"}"
+      + "],\"type\":\"simple_response\",\"platform\":\"google\""
+      + "}";
+
+  private final String TEST_CHAT_BUBBLE_SINGLE_ITEM = "{"
+      + "\"customizeAudio\":true,"
+      + "\"textToSpeech\":\"hello\",\"ssml\":\"ssmlText\",\"displayText\":\"Hello\","
       + "\"type\":\"simple_response\",\"platform\":\"google\""
       + "}";
 
@@ -70,7 +77,8 @@ public class GoogleAssistantResponseMessagesTest {
 
   @Test
   public void testResponseChatBubbleDeserialization() {
-    ResponseChatBubble chatBubble = (ResponseChatBubble) gson.fromJson(TEST_CHAT_BUBBLE, ResponseMessage.class);
+    ResponseChatBubble chatBubble =
+        (ResponseChatBubble) gson.fromJson(TEST_CHAT_BUBBLE_SINGLE_ITEM, ResponseMessage.class);
     assertTrue(chatBubble.getCustomizeAudio());
     assertEquals(1, chatBubble.getItems().size());
     assertEquals("hello", chatBubble.getItems().get(0).getTextToSpeech());
@@ -79,22 +87,41 @@ public class GoogleAssistantResponseMessagesTest {
   }
 
   @Test
-  public void testResponseChatBubbleSerialization() {
-    ResponseChatBubble chatBubble = new ResponseChatBubble();
-    chatBubble.setCustomizeAudio(true);
-    
-    ResponseChatBubble.Item item = new ResponseChatBubble.Item();
-    item.setTextToSpeech("hello");
-    item.setSsml("ssmlText");
-    item.setDisplayText("Hello");
-    
-    chatBubble.setItems(Arrays.asList(item));
-    assertEquals(TEST_CHAT_BUBBLE, gson.toJson(chatBubble));
+  public void testResponseChatBubbleSeveralItemsDeserialization() {
+    ResponseChatBubble chatBubble =
+        (ResponseChatBubble) gson.fromJson(TEST_CHAT_BUBBLE_SEVERAL_ITEMS, ResponseMessage.class);
+    assertTrue(chatBubble.getCustomizeAudio());
+    assertEquals(2, chatBubble.getItems().size());
+    assertEquals("hello1", chatBubble.getItems().get(0).getTextToSpeech());
+    assertEquals("ssmlText1", chatBubble.getItems().get(0).getSsml());
+    assertEquals("Hello1", chatBubble.getItems().get(0).getDisplayText());
+    assertEquals("hello2", chatBubble.getItems().get(1).getTextToSpeech());
+    assertEquals("ssmlText2", chatBubble.getItems().get(1).getSsml());
+    assertEquals("Hello2", chatBubble.getItems().get(1).getDisplayText());
   }
 
   @Test
+  public void testResponseChatBubbleSeveralItemsSerialization() {
+    ResponseChatBubble chatBubble = new ResponseChatBubble();
+    chatBubble.setCustomizeAudio(true);
+    
+    ResponseChatBubble.Item item1 = new ResponseChatBubble.Item();
+    item1.setTextToSpeech("hello1");
+    item1.setSsml("ssmlText1");
+    item1.setDisplayText("Hello1");
+
+    ResponseChatBubble.Item item2 = new ResponseChatBubble.Item();
+    item2.setTextToSpeech("hello2");
+    item2.setSsml("ssmlText2");
+    item2.setDisplayText("Hello2");
+
+    chatBubble.setItems(Arrays.asList(item1, item2));
+    assertEquals(TEST_CHAT_BUBBLE_SEVERAL_ITEMS, gson.toJson(chatBubble));
+  }
+  @Test
   public void testResponseBasicCardDeserialization() {
-    ResponseBasicCard basicCard = (ResponseBasicCard) gson.fromJson(TEST_BASIC_CARD, ResponseMessage.class);
+    ResponseBasicCard basicCard =
+        (ResponseBasicCard) gson.fromJson(TEST_BASIC_CARD, ResponseMessage.class);
     assertEquals("titleVal", basicCard.getTitle());
     assertEquals("subtitleVal", basicCard.getSubtitle());
     assertEquals("formattedVal", basicCard.getFormattedText());
@@ -124,7 +151,8 @@ public class GoogleAssistantResponseMessagesTest {
 
   @Test
   public void testResponseListCardDeserialization() {
-    ResponseListCard listCard = (ResponseListCard) gson.fromJson(TEST_LIST_CARD, ResponseMessage.class);
+    ResponseListCard listCard =
+        (ResponseListCard) gson.fromJson(TEST_LIST_CARD, ResponseMessage.class);
     assertEquals("titleVal", listCard.getTitle());
     checkItems(listCard.getItems());
   }
@@ -143,7 +171,8 @@ public class GoogleAssistantResponseMessagesTest {
 
   @Test
   public void testResponseSuggestionChipsDeserialization() {
-    ResponseSuggestionChips suggestionChips = (ResponseSuggestionChips) gson.fromJson(TEST_SUGGESTION_CHIP, ResponseMessage.class);
+    ResponseSuggestionChips suggestionChips =
+        (ResponseSuggestionChips) gson.fromJson(TEST_SUGGESTION_CHIP, ResponseMessage.class);
 
     assertEquals(1, suggestionChips.getSuggestions().size());
     assertEquals("titleVal", suggestionChips.getSuggestions().get(0).getTitle());
@@ -162,7 +191,8 @@ public class GoogleAssistantResponseMessagesTest {
 
   @Test
   public void testResponseCarouselCardDeserialization() {
-    ResponseCarouselCard carouselCard = (ResponseCarouselCard) gson.fromJson(TEST_CAROUSEL_CARD, ResponseMessage.class);
+    ResponseCarouselCard carouselCard =
+        (ResponseCarouselCard) gson.fromJson(TEST_CAROUSEL_CARD, ResponseMessage.class);
     checkItems(carouselCard.getItems());
   }
 
@@ -176,7 +206,8 @@ public class GoogleAssistantResponseMessagesTest {
 
   @Test
   public void testResponseLinkOutChipDeserialization() {
-    ResponseLinkOutChip linkOutChip = (ResponseLinkOutChip) gson.fromJson(TEST_LINK_OUT_CHIP, ResponseMessage.class);
+    ResponseLinkOutChip linkOutChip =
+        (ResponseLinkOutChip) gson.fromJson(TEST_LINK_OUT_CHIP, ResponseMessage.class);
 
     assertEquals("destanationVal", linkOutChip.getDestinationName());
     assertEquals("urlVal", linkOutChip.getUrl());

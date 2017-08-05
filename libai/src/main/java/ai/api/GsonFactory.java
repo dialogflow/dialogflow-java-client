@@ -33,6 +33,7 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
+import ai.api.model.GoogleAssistantResponseMessages.ResponseChatBubble;
 import ai.api.model.ResponseMessage;
 import ai.api.model.ResponseMessage.MessageType;
 import ai.api.model.ResponseMessage.Platform;
@@ -61,6 +62,7 @@ public class GsonFactory {
     SIMPLIFIED_GSON = gsonBuilder.create();
     
     gsonBuilder.registerTypeAdapter(ResponseMessage.ResponseSpeech.class, new ResponseSpeechAdapter());
+    gsonBuilder.registerTypeAdapter(ResponseChatBubble.class, new ResponseChatBubbleAdapter());
     PROTOCOL_GSON = gsonBuilder.create();
   }
 
@@ -164,6 +166,36 @@ public class GsonFactory {
 
     @Override
     public JsonElement serialize(ResponseMessage src, Type typeOfSrc, JsonSerializationContext context) {
+      return SIMPLIFIED_GSON.toJsonTree(src, ResponseMessage.class);
+    }
+  }
+
+  private static class ResponseChatBubbleAdapter implements JsonDeserializer<ResponseChatBubble>,
+  JsonSerializer<ResponseChatBubble> {
+    public ResponseChatBubble deserialize(JsonElement json, Type typeOfT,
+        JsonDeserializationContext context) throws JsonParseException {
+
+      if (json.isJsonObject()) {
+        final JsonObject jsonObject = (JsonObject) json;
+        if (jsonObject.has("textToSpeech")) {
+          JsonArray items = jsonObject.getAsJsonArray("items");
+          if (items == null) {
+            items = new JsonArray(1);
+            jsonObject.add("items", items);
+          }
+          JsonObject item = new JsonObject();
+          item.add("textToSpeech", jsonObject.get("textToSpeech"));
+          item.add("ssml", jsonObject.get("ssml"));
+          item.add("displayText", jsonObject.get("displayText"));
+          items.add(item);
+        }
+      }
+
+      return SIMPLIFIED_GSON.fromJson(json, typeOfT);
+    }
+
+    @Override
+    public JsonElement serialize(ResponseChatBubble src, Type typeOfSrc, JsonSerializationContext context) {
       return SIMPLIFIED_GSON.toJsonTree(src, ResponseMessage.class);
     }
   }
