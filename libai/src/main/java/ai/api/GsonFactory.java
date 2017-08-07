@@ -196,7 +196,16 @@ public class GsonFactory {
 
     @Override
     public JsonElement serialize(ResponseChatBubble src, Type typeOfSrc, JsonSerializationContext context) {
-      return SIMPLIFIED_GSON.toJsonTree(src, ResponseMessage.class);
+      JsonObject result = (JsonObject)SIMPLIFIED_GSON.toJsonTree(src, ResponseMessage.class);
+      JsonArray items = result.getAsJsonArray("items");
+      if ((items != null) && (items.size() == 1)) {
+        JsonObject item = (JsonObject)items.get(0);
+        result.add("textToSpeech", item.get("textToSpeech"));
+        result.add("ssml", item.get("ssml"));
+        result.add("displayText", item.get("displayText"));
+        result.remove("items");
+      }
+      return result;
     }
   }
 }

@@ -35,8 +35,8 @@ public class GoogleAssistantResponseMessagesTest {
 
   private final String TEST_CHAT_BUBBLE_SINGLE_ITEM = "{"
       + "\"customizeAudio\":true,"
-      + "\"textToSpeech\":\"hello\",\"ssml\":\"ssmlText\",\"displayText\":\"Hello\","
-      + "\"type\":\"simple_response\",\"platform\":\"google\""
+      + "\"type\":\"simple_response\",\"platform\":\"google\","
+      + "\"textToSpeech\":\"hello\",\"ssml\":\"ssmlText\",\"displayText\":\"Hello\""
       + "}";
 
   private final String TEST_BASIC_CARD = "{"
@@ -74,6 +74,20 @@ public class GoogleAssistantResponseMessagesTest {
       + "\"destinationName\":\"destanationVal\",\"url\":\"urlVal\","
       + "\"type\":\"link_out_chip\",\"platform\":\"google\""
       + "}";
+
+  @Test
+  public void testResponseChatBubbleSerialization() {
+    ResponseChatBubble chatBubble = new ResponseChatBubble();
+    chatBubble.setCustomizeAudio(true);
+    
+    ResponseChatBubble.Item item = new ResponseChatBubble.Item();
+    item.setTextToSpeech("hello");
+    item.setSsml("ssmlText");
+    item.setDisplayText("Hello");
+
+    chatBubble.setItems(Arrays.asList(item));
+    assertEquals(TEST_CHAT_BUBBLE_SINGLE_ITEM, gson.toJson(chatBubble));
+  }
 
   @Test
   public void testResponseChatBubbleDeserialization() {
