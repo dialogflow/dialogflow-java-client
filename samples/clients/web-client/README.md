@@ -11,7 +11,7 @@ The last version of code always can be found at Github repository:
 
 change a work directory
 
-    cd apiai-java-sdk/examples/web-client
+    cd apiai-java-sdk/samples/clients/web-client
 
 and run the assembly routine to create a WAR file
 

@@ -35,7 +35,7 @@ The last version of code always can be found at Github repository:
 
 change a work directory
 
-    cd apiai-java-sdk/examples/voice-client
+    cd apiai-java-sdk/samples/clients/voice-client
 
 and run the assembly routine
 

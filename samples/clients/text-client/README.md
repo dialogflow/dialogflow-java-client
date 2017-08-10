@@ -11,13 +11,13 @@ The last version of code always can be found at Github repository:
 
 change a work directory
 
-    cd apiai-java-sdk/examples/text-client
+    cd apiai-java-sdk/samples/clients/text-client
 
 and run the assembly routine
 
     mvn package
 
-## 4. Run the application
+## 2. Run the application
 
 After build is complete you should have a runnable JAR file in the `target`
 directory. It could be run directly by calling java
