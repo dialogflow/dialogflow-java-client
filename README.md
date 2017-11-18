@@ -19,7 +19,7 @@ This section contains a detailed tutorial on how to work with libai. This tutori
 1. Create an API.AI agent with entities and intents, or use one that you've already created. See the API.AI documentation for instructions on how to do this. 
 2. Open [IntelliJ IDEA](https://developer.android.com/sdk/installing/studio.html).
 3. From the start screen (or **File** menu) , choose **Open...**.<br/> ![Open project](docs/images/OpenProject.png)
-4. In the Open project dialog, fill **Path** to **apiai-java-sdk** directory, then expand exmaples directory and choose one of the client examples. Then click **Ok**.<br/> ![Open project dialog](docs/images/OpenProjectDialog.png)
+4. In the Open project dialog, fill **Path** to **apiai-java-sdk** directory, then expand examples directory and choose one of the client examples. Then click **Ok**.<br/> ![Open project dialog](docs/images/OpenProjectDialog.png)
 5. Open **Run**, choose **Edit Configuration**. In the Run/Debug Configuration Dialog, fill **program arguments** with your **Client access token**<br/> ![Api keys](docs/images/apiKeys.png)
 6. If there are no errors, you can get the result using **Idea Input/Output** to make text request (**text-client**).
 
