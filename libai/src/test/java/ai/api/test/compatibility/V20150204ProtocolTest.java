@@ -66,32 +66,9 @@ public class V20150204ProtocolTest {
         assertEquals("Hi! How are you?", aiResponse.getResult().getSpeech());
     }
 
-    @Test
-    public void legacySpeechVoiceRequestTest() throws MalformedURLException, AIServiceException {
-        final AIConfiguration config = new AIConfiguration(
-                "3485a96fb27744db83e78b8c4bc9e7b7",
-                AIConfiguration.SupportedLanguages.English);
-
-        config.setProtocolVersion(PROTOCOL_VERSION);
-
-        final SimpleProtocolTestingService aiService = new SimpleProtocolTestingService(config);
-        final InputStream inputStream = getClass().getClassLoader().getResourceAsStream("what_is_your_name.raw");
-
-        final AIRequest aiRequest = new AIRequest();
-        prepareRequest(aiRequest, config);
-
-        final String textRequest = gson.toJson(aiRequest);
-        final String textResponse = aiService.doDefaultProtocolSoundRequest(inputStream, textRequest);
-
-        final AIResponseV20150204 aiResponse = gson.fromJson(textResponse, AIResponseV20150204.class);
-
-        assertNotNull(aiResponse);
-        assertEquals("My name is Sam", aiResponse.getResult().getSpeech());
-    }
 
     private void prepareRequest(final AIRequest request, final AIConfiguration config) {
         request.setLanguage(config.getApiAiLanguage());
         request.setTimezone(Calendar.getInstance().getTimeZone().getID());
     }
-
 }

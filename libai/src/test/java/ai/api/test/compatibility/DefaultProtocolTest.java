@@ -82,51 +82,6 @@ public class DefaultProtocolTest {
         }
     }
 
-    @Test
-    public void outputContextVoiceTest() {
-        final AIConfiguration config = new AIConfiguration(
-                "3485a96fb27744db83e78b8c4bc9e7b7",
-                AIConfiguration.SupportedLanguages.English);
-
-        config.setProtocolVersion(null);
-
-        final SimpleProtocolTestingService aiDataService = new SimpleProtocolTestingService(config);
-
-        final InputStream inputStream = getClass().getClassLoader().getResourceAsStream("what_is_your_name.raw");
-
-        try {
-
-            final AIRequest aiRequest = new AIRequest();
-            prepareRequest(aiRequest, config);
-
-            final String textRequest = gson.toJson(aiRequest);
-
-            final String textResponse = aiDataService.doDefaultProtocolSoundRequest(inputStream, textRequest);
-
-            final AIResponseDefault aiResponse = gson.fromJson(textResponse, AIResponseDefault.class);
-
-            assertNotNull(aiResponse);
-
-            assertNotNull(aiResponse.getResult());
-            assertNotNull(aiResponse.getResult().getMetadata());
-
-            final String[] contexts = aiResponse.getResult().getMetadata().getContexts();
-            assertNotNull(contexts);
-            boolean contextLoaded = false;
-            for (int i = 0; i < contexts.length; i++) {
-                if ("name_question".equalsIgnoreCase(contexts[i])) {
-                    contextLoaded = true;
-                }
-            }
-            assertTrue(contextLoaded);
-
-
-        } catch (final AIServiceException | MalformedURLException e) {
-            e.printStackTrace();
-            assertTrue(e.getMessage(), false);
-        }
-    }
-
     private void prepareRequest(final AIRequest request, final AIConfiguration config) {
         request.setLanguage(config.getApiAiLanguage());
         request.setTimezone(Calendar.getInstance().getTimeZone().getID());
