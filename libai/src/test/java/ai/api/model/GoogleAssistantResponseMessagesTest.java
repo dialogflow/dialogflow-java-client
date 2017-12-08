@@ -19,6 +19,8 @@ package ai.api.model;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import ai.api.model.ResponseMessage.MessageType;
+import ai.api.model.ResponseMessage.Platform;
 import java.util.Arrays;
 import java.util.List;
 
@@ -250,6 +252,13 @@ public class GoogleAssistantResponseMessagesTest {
     linkOutChip.setUrl("urlVal");
 
     assertEquals(TEST_LINK_OUT_CHIP, gson.toJson(linkOutChip));
+  }
+
+  @Test
+  public void testPlatformValueAccess() {
+    ResponseBasicCard message = new ResponseBasicCard();
+    assertEquals(Platform.GOOGLE, message.getPlatform());
+    assertEquals(MessageType.BASIC_CARD, message.getType());
   }
 
   private void checkItems(List<CardItem> items) {

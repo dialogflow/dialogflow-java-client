@@ -17,6 +17,9 @@
 package ai.api.model;
 
 import static org.junit.Assert.*;
+
+import ai.api.model.ResponseMessage.MessageType;
+import ai.api.model.ResponseMessage.Platform;
 import org.junit.Test;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
@@ -48,6 +51,8 @@ public class ResponseMessageTest {
   private static final String TEST_PAYLOAD = "{\"payload\":{\"field1\":11},\"type\":4}";
 
   private static final String TEST_BAD_TYPE = "{\"field1\":1,\"type\":100}";
+
+  private static final String TEST_CUSTOM_MESSAGE = "{\"someField\":10,\"type\":2,\"platform\":\"facebook\"}";
 
   @Test
   public void testResponseSpeechDeserialization() {
@@ -156,12 +161,49 @@ public class ResponseMessageTest {
     assertEquals(json, gson.toJson(gson.fromJson(json, ResponseMessage.class)));
   }
 
+  @Test
+  public void testPlatformAndTypeValueAccess() {
+    ResponsePayload message = new ResponsePayload();
+    assertEquals(Platform.DEFAULT, message.getPlatform());
+    assertEquals(MessageType.PAYLOAD, message.getType());
+  }
+
+  @Test
+  public void testCustomResponseMessageDeserialization() {
+    CustomResponseMessage message = (CustomResponseMessage) gson.fromJson(TEST_CUSTOM_MESSAGE,
+        CustomResponseMessage.class);
+    assertEquals(10, message.someField);
+  }
+
+  @Test
+  public void testCustomResponseMessageSerialization() {
+    CustomResponseMessage message = new CustomResponseMessage(MessageType.QUICK_REPLY, Platform.FACEBOOK);
+    message.someField = 10;
+    assertEquals(TEST_CUSTOM_MESSAGE, gson.toJson(message));
+  }
+
+  @Test
+  public void testResponseMessageToString() {
+    ResponseSpeech speech = new ResponseSpeech();
+    speech.setSpeech("one", "two");
+    assertEquals(TEST_SPEECH, speech.toString());
+  }
+
   private static class PayloadBody {
     @SuppressWarnings("unused") /* this field used by serialization class */ 
     private final int field1;
     
     public PayloadBody(int value) {
       this.field1 = value;
+    }
+  }
+
+  private static class CustomResponseMessage extends ResponseMessage {
+
+    int someField = 0;
+
+    protected CustomResponseMessage(MessageType type, Platform platform) {
+      super(type, platform);
     }
   }
 }

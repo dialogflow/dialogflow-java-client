@@ -16,6 +16,8 @@
  
 package ai.api.model;
 
+import ai.api.GsonFactory;
+import com.google.gson.Gson;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -37,6 +39,8 @@ import ai.api.model.GoogleAssistantResponseMessages.ResponseSuggestionChips;
  * <a href="https://docs.api.ai/docs/query#section-message-objects">response message objects</a>.
  */
 public abstract class ResponseMessage {
+
+  final static Gson gson = GsonFactory.getDefaultFactory().getGson();
 
   @Expose
   private final MessageType type;
@@ -64,10 +68,19 @@ public abstract class ResponseMessage {
     this.platform = platform != null ? platform : Platform.DEFAULT;
   }
 
+  /** Return message {@link Platform} value */
+  public Platform getPlatform() { return platform; }
+
+  /** Return {@link MessageType} value */
+  public MessageType getType() { return type; }
+
+  @Override
+  public String toString() { return gson.toJson(this); }
+
   /**
    * Holds the message type integer code and related {@link Type}
    */
-  public static enum MessageType {
+  public enum MessageType {
     /** Text response message object */
     SPEECH(0, "message", ResponseSpeech.class),
     /** Card message object */
@@ -89,7 +102,7 @@ public abstract class ResponseMessage {
     private final String name;
     private final Type type;
 
-    private MessageType(int code, String name, Type curClass) {
+    MessageType(int code, String name, Type curClass) {
       assert name != null;
       assert curClass != null;
       this.code = code;
@@ -117,9 +130,7 @@ public abstract class ResponseMessage {
     public Type getType() {
       return type;
     }
-    
 
-    
     private static Map<Integer,MessageType> typeByCode = new HashMap<>();
     private static Map<String,MessageType> typeByName = new HashMap<>();
 
