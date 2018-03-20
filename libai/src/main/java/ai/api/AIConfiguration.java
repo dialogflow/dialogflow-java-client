@@ -229,6 +229,7 @@ public class AIConfiguration implements Cloneable {
     English("en"),
     EnglishUS("en-US", "en"),
     EnglishGB("en-GB", "en"),
+    Danish("da"),
     Dutch("nl"),
     French("fr"),
     German("de"),
