@@ -227,18 +227,31 @@ public class AIConfiguration implements Cloneable {
     ChineseHongKong("zh-HK"),
     ChineseTaiwan("zh-TW"),
     English("en"),
-    EnglishUS("en-US", "en"),
+	EnglishAU("en-AU", "en"),
+	EnglishCA("en-CA", "en"),
+	EnglishIN("en-IN", "en"),
+    EnglishUS("en-US", "en"), //Default English locale
     EnglishGB("en-GB", "en"),
+	Danish("da"),
     Dutch("nl"),
     French("fr"),
+	FrenchCA("fr-CA","fr"),
+	FrenchFR("fr-FR", "fr"), //Default French locale
     German("de"),
+	Hindi("hi"),
+	Indonesian("id"),
     Italian("it"),
     Japanese("ja"),
     Korean("ko"),
+	Norwegian("no"),
     Portuguese("pt"),
     PortugueseBrazil("pt-BR"),
     Russian("ru"),
     Spanish("es"),
+	SpanishLA("es-419","es"), //Latin American locale
+	SpanishES("es-ES","es"),  //Default Spanish locale
+	Swedish("sv"),
+	Thai("th"),
     Ukrainian("uk");
 
     /**
