@@ -16,16 +16,20 @@
  
 package ai.api.model;
 
-import ai.api.GsonFactory;
-import com.google.gson.Gson;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import org.junit.Test;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+
+import ai.api.GsonFactory;
 
 /**
  * Created by alexey on 07/12/2016.
@@ -43,6 +47,13 @@ public class AIEventTest {
             "      \"poker\": \"face\""+
             "    }\n" +
             "}";
+    
+    private static final String ONE_EVENT_COLLECTION = "{\n" +
+            "    \"name\": \"joke\",\n" +
+            "    \"data\": {" +
+            "      \"poker\": [\"face\",\"hand\"] "+
+            "    }\n" +
+            "}";
 
     private static final String EVENTS_ARRAY = "{\n" +
             "    \"name\": \"test\",\n" +
@@ -50,7 +61,8 @@ public class AIEventTest {
             "      \"heart\": \"ace\","+
             "      \"diamond\": \"King\","+
             "      \"club\": \"queen\","+
-            "      \"spade\": \"Jack\""+
+            "      \"spade\": \"Jack\","+
+            "      \"poker\": [\"face\",\"hand\"] "+
             "    }\n" +
             "}";
 
@@ -70,6 +82,16 @@ public class AIEventTest {
         assertEquals("joke", aiEvent.getName());
         assertEquals("face", aiEvent.getDataField("poker"));
     }
+    
+    @Test
+    public void OneEventCollection() {
+        final AIEvent aiEvent = gson.fromJson(ONE_EVENT_COLLECTION, AIEvent.class);
+        List<String> pokerBits = new ArrayList<>();
+        pokerBits.add("face");
+        pokerBits.add("hand");
+        assertEquals("joke", aiEvent.getName());
+        assertEquals("[\"face\",\"hand\"]", aiEvent.getDataField("poker"));
+    }
 
     @Test
     public void ListEvents() {
@@ -79,12 +101,13 @@ public class AIEventTest {
         assertEquals("King", aiEvent.getDataField("diamond"));
         assertEquals("queen", aiEvent.getDataField("club"));
         assertEquals("Jack", aiEvent.getDataField("spade"));
+        assertEquals("[\"face\",\"hand\"]", aiEvent.getDataField("poker"));
     }
 
     @Test
     public void CreateEmptyEvent() {
         final AIEvent aiEvent = new AIEvent("test");
-        aiEvent.setData(new HashMap<String, String>());
+        aiEvent.setData(new HashMap<String, JsonElement>());
         assertEquals("{\"name\":\"test\",\"data\":{}}", gson.toJson(aiEvent));
     }
 

@@ -16,11 +16,14 @@
  
 package ai.api.model;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.annotations.SerializedName;
 
 public class AIEvent implements Serializable {
   private static final long serialVersionUID = 1L;
@@ -29,7 +32,7 @@ public class AIEvent implements Serializable {
   private String name;
 
   @SerializedName("data")
-  private Map<String, String> data;
+  private Map<String, JsonElement> data;
 
   public AIEvent() {
 
@@ -53,24 +56,36 @@ public class AIEvent implements Serializable {
   /**
    * String data map
    */
-  public Map<String, String> getData() {
+  public Map<String, JsonElement> getData() {
     return data;
   }
 
-  public void setData(Map<String, String> data) {
+  public void setData(Map<String, JsonElement> data) {
     this.data = data;
   }
 
   public void addDataField(String key, String value) {
     if (data == null)
-      setData(new HashMap<String, String>());
-    data.put(key, value);
+      setData(new HashMap<String, JsonElement>());
+    data.put(key, new Gson().toJsonTree(value));
   }
 
   public void addDataField(Map<String, String> dataParams) {
     if (data == null)
-      setData(new HashMap<String, String>());
-    data.putAll(dataParams);
+      setData(new HashMap<String, JsonElement>());
+    
+    if (dataParams != null) {
+        for (Map.Entry<String, String> entry : dataParams.entrySet()) {
+          this.data.put(entry.getKey(), new Gson().toJsonTree(entry.getValue()));
+        }
+    }
+  }
+  
+  public void addDataCollection(String key, Collection<String> collection) {
+	  if (data == null) 
+	      setData(new HashMap<String, JsonElement>());
+	  
+	  data.put(key, new Gson().toJsonTree(collection));
   }
 
   public String getDataField(final String name) {
@@ -78,8 +93,13 @@ public class AIEvent implements Serializable {
   }
 
   public String getDataField(final String name, final String defaultValue) {
-    if (data.containsKey(name)) {
-      return data.get(name);
+    if (data.containsKey(name) && data.get(name) != null) {
+    		if(data.get(name).isJsonArray()) {
+    			return data.get(name).toString();
+    		} else {
+    			return data.get(name).getAsString();
+    		} 
+      
     }
     return defaultValue;
   }
